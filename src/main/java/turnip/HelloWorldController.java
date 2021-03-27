@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/hello")
 public class HelloWorldController {
@@ -13,8 +15,12 @@ public class HelloWorldController {
     LoggerFactory.getLogger(HelloWorldController.class);
 
   @GetMapping
-  public String sayHello() {
+  public Map<String, String> sayHello() {
     log.info("hello'd");
-    return "Hello from Spring 5 and embedded Tomcat!";
+    return Map.of(
+      "Hello", "world", 
+      "Spring", "5",
+      "Jetty", "10" );
+    
   }
 }
