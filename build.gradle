@@ -1,18 +1,41 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'application'
 }
 
-group 'cloud.kopi'
+group 'cloud.kopi.turnip'
 version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
 }
 
+java {
+    toolchain {
+//        languageVersion = JavaLanguageVersion.of(16)
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
 dependencies {
+//    implementation 'org.springframework:spring-webmvc:5.3.4'
+//    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:10.0.2'
+
+    implementation 'org.springframework:spring-webmvc:5.0.1.RELEASE'
+    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:8.0.47'
+
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+    
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
+
+
+
+application {
+    mainClass = 'turnip.App'
+}
+
 
 test {
     useJUnitPlatform()
