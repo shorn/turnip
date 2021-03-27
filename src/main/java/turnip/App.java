@@ -4,6 +4,8 @@ import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,10 +14,12 @@ import java.io.IOException;
  https://auth0.com/blog/spring-5-embedded-tomcat-8-gradle-tutorial/ 
  */
 public class App {
+  private static Logger log = LoggerFactory.getLogger(App.class);
+  
   private static final int PORT = 8080;
 
   public static void main(String... args) throws Exception {
-    System.out.println("main() called");
+    log.info("main() called");
 
     Server server = new Server();
     ServerConnector connector = new ServerConnector(server);
@@ -26,7 +30,10 @@ public class App {
     server.setHandler(contextHandler);
     contextHandler.addServletContainerInitializer(new SpringAppConfig());
     
+    addRuntimeShutdownHook(server);
+    
     server.start();
+    server.join();
   }
 
   private static String createTempDir(String prefix) {
@@ -43,6 +50,24 @@ public class App {
           System.getProperty("java.io.tmpdir"),
         ex );
     }
+  }
+
+  private static void addRuntimeShutdownHook(final Server server) {
+    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+      @Override
+      public void run() {
+        if (server.isStarted()) {
+          server.setStopAtShutdown(true);
+          try {
+            server.stop();
+          } catch (Exception e) {
+            System.out.println("Error while stopping jetty server: " + e.getMessage());
+            log.error("Error while stopping jetty server: " + 
+                e.getMessage(), e);
+          }
+        }
+      }
+    }));
   }
 
 }

@@ -18,12 +18,17 @@ java{
 
 dependencies{
   implementation 'org.springframework:spring-webmvc:5.3.4'
-  
+
+  // embedded Jetty server
   implementation 'org.eclipse.jetty:jetty-server:10.0.1'
   implementation 'org.eclipse.jetty:jetty-servlet:10.0.1'
-  
-  // added for jetty
-  runtimeOnly 'org.slf4j:slf4j-simple:1.8.0-beta4'
+
+  // use SLf4J API to log against
+  implementation 'org.slf4j:slf4j-api:1.8.0-beta4'
+
+  // turnip stuff and jetty both use logback
+  runtimeOnly 'ch.qos.logback:logback-core:1.3.0-alpha5'
+  runtimeOnly 'ch.qos.logback:logback-classic:1.3.0-alpha5'
 
   compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
   

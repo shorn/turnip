@@ -1,5 +1,7 @@
 package turnip;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.context.ContextLoaderListener;
@@ -17,12 +19,14 @@ import java.util.Set;
 @EnableWebMvc
 @ComponentScan(basePackages = {"turnip"})
 public class SpringAppConfig implements ServletContainerInitializer {
+  private static Logger log = LoggerFactory.getLogger(App.class);
+  
   @Override
   public void onStartup(
     Set<Class<?>> classes,
     ServletContext ctx
   ) throws ServletException {
-    System.out.println("onStartup() called");
+    log.info("onStartup() called");
     initSpring(ctx);
   }
 

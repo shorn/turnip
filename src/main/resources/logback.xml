@@ -1,0 +1,24 @@
+<configuration>
+  <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
+
+  <appender name="UNMASKED_CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+
+    <!-- encoders are assigned the type
+         ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+    <encoder>
+      <!--<pattern>%d{HH:mm:ss,SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+      <!--<pattern>%d{"ddMMM HH:mm:ss,SSS"} %level %thread %logger{0} %m%n</pattern>-->
+      <pattern>%d{"HH:mm:ss,SSS"} %level %thread %logger{0} %m%n</pattern>
+    </encoder>
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="UNMASKED_CONSOLE"/>
+  </root>
+
+
+  <logger name="turnip" level="debug"/>
+
+  <logger name="org.springframework" level="info"/>
+
+</configuration>
