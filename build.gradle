@@ -18,8 +18,12 @@ java{
 
 dependencies{
   implementation 'org.springframework:spring-webmvc:5.3.4'
-//    implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:8.0.47'
-  implementation 'org.apache.tomcat.embed:tomcat-embed-jasper:9.0.43'
+  
+  implementation 'org.eclipse.jetty:jetty-server:10.0.1'
+  implementation 'org.eclipse.jetty:jetty-servlet:10.0.1'
+  
+  // added for jetty
+  runtimeOnly 'org.slf4j:slf4j-simple:1.8.0-beta4'
 
   compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
   

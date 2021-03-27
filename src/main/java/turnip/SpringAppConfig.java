@@ -19,11 +19,14 @@ import java.util.Set;
 public class SpringAppConfig implements ServletContainerInitializer {
   @Override
   public void onStartup(
-    Set<Class<?>> c,
+    Set<Class<?>> classes,
     ServletContext ctx
   ) throws ServletException {
     System.out.println("onStartup() called");
+    initSpring(ctx);
+  }
 
+  public static void initSpring(ServletContext ctx) {
     // Create the 'root' Spring application context
     AnnotationConfigWebApplicationContext rootContext = 
       new AnnotationConfigWebApplicationContext();
@@ -41,7 +44,6 @@ public class SpringAppConfig implements ServletContainerInitializer {
       "dispatcher", new DispatcherServlet(dispatcherContext) );
     dispatcher.setLoadOnStartup(1);
     dispatcher.addMapping("/");
-    
   }
 }
 

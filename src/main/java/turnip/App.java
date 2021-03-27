@@ -1,7 +1,9 @@
 package turnip;
 
-import org.apache.catalina.Context;
-import org.apache.catalina.startup.Tomcat;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,28 +17,21 @@ public class App {
   public static void main(String... args) throws Exception {
     System.out.println("main() called");
 
-    Tomcat tomcat = configTomcat();
+    Server server = new Server();
+    ServerConnector connector = new ServerConnector(server);
+    connector.setPort(8080);
+    server.setConnectors(new Connector[] {connector});
 
-    tomcat.start();
-    tomcat.getConnector().start();
-    tomcat.getServer().await();
+    ServletContextHandler contextHandler = new ServletContextHandler();
+    server.setHandler(contextHandler);
+    contextHandler.addServletContainerInitializer(new SpringAppConfig());
+    
+    server.start();
   }
 
-  public static Tomcat configTomcat() throws Exception {
-    String appBase = ".";
-    Tomcat tomcat = new Tomcat();
-    tomcat.setBaseDir(createTempDir());
-    tomcat.setPort(PORT);
-    tomcat.getHost().setAppBase(appBase);
-    Context appContext = tomcat.addWebapp("", appBase);
-    appContext.addServletContainerInitializer(new SpringAppConfig(), null);
-    return tomcat;
-  }
-
-  // based on AbstractEmbeddedServletContainerFactory
-  private static String createTempDir() {
+  private static String createTempDir(String prefix) {
     try{
-      File tempDir = File.createTempFile("tomcat.", "." + PORT);
+      File tempDir = File.createTempFile(prefix +".", "." + PORT);
       tempDir.delete();
       tempDir.mkdir();
       tempDir.deleteOnExit();
