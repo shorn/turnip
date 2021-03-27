@@ -18,7 +18,7 @@ public class SpringAppConfig implements WebApplicationInitializer {
 
   @Override
   public void onStartup(ServletContext container) {
-    System.out.println("spring app config");
+    System.out.println("onStartup() called");
     // Create the 'root' Spring application context
     AnnotationConfigWebApplicationContext rootContext = new AnnotationConfigWebApplicationContext();
     rootContext.register(SpringAppConfig.class);
