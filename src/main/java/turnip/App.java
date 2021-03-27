@@ -18,6 +18,7 @@ public class App {
     Tomcat tomcat = configTomcat();
 
     tomcat.start();
+    tomcat.getConnector().start();
     tomcat.getServer().await();
   }
 
