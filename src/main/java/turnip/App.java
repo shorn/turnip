@@ -1,5 +1,6 @@
 package turnip;
 
+import org.apache.catalina.Context;
 import org.apache.catalina.startup.Tomcat;
 
 import java.io.File;
@@ -26,8 +27,8 @@ public class App {
     tomcat.setBaseDir(createTempDir());
     tomcat.setPort(PORT);
     tomcat.getHost().setAppBase(appBase);
-    tomcat.addWebapp("", appBase);
-
+    Context appContext = tomcat.addWebapp("", appBase);
+    appContext.addServletContainerInitializer(new SpringAppConfig(), null);
     return tomcat;
   }
 
