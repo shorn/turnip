@@ -36,15 +36,6 @@ tasks.withType(JavaExec) {
 //  jvmArgs += ""
 }
 
-applicationDefaultJvmArgs = [
-  // UTC everywhere, always
-  '-Duser.timezone=UTC',
-  // UTF-8 everywhere, always
-  "-Dfile.encoding=UTF-8", 
-  // for consistency, rather than any specific reason 
-  "-Duser.language=", "-Duser.country=", "-Duser.variant=",
-]
-
 dependencies{
   implementation 'org.springframework:spring-webmvc:5.3.4'
 
@@ -75,6 +66,46 @@ application{
   mainClass = 'turnip.App'
 }
 
+applicationDefaultJvmArgs = [
+  // UTC everywhere, always
+  '-Duser.timezone=UTC',
+  // UTF-8 everywhere, always
+  "-Dfile.encoding=UTF-8",
+  // for consistency, rather than any specific reason 
+  "-Duser.language=", "-Duser.country=", "-Duser.variant=",
+]
+
+
 test{
   useJUnitPlatform()
+}
+
+task uberJar(type: Jar) {
+  group "distribution"
+  archiveClassifier = 'uber'
+
+  // different name from standard jar and don't want version in the name
+  archiveFileName = "turnip-app.jar"
+  
+  manifest{
+    mainClassName = "turnip.App"
+    duplicatesStrategy "EXCLUDE"
+    attributes (
+      'Main-Class': 'turnip.App',
+      "Implementation-Title": "Turnip",
+      "Implementation-Version": archiveVersion,
+    )
+  }
+  
+  dependsOn configurations.runtimeClasspath
+  from sourceSets.main.output
+  from {
+    configurations.runtimeClasspath.findAll { 
+      it.name.endsWith('jar') }.collect { zipTree(it) 
+    }
+  }
+  
+  doFirst{
+    println "generating ubrJar to ${archiveFile.get()}"
+  }
 }
