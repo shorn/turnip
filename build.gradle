@@ -16,6 +16,35 @@ java{
   }
 }
 
+tasks.withType(JavaCompile) {
+  // show details of deprecated usage
+  options.compilerArgs += "-Xlint:deprecation"
+  // show details of unchecked or unsafe operations
+  options.compilerArgs += "-Xlint:unchecked"
+  // warn about dodgy finalizers
+  options.compilerArgs += "-Xlint:finally"
+
+  // UTF-8 everywhere - yes, even (especially!) when compiling 
+  // your IDE should be set to UTF-8, too
+  options.encoding = "UTF-8"
+
+}
+tasks.withType(Test) {
+//  jvmArgs += ""
+}
+tasks.withType(JavaExec) {
+//  jvmArgs += ""
+}
+
+applicationDefaultJvmArgs = [
+  // UTC everywhere, always
+  '-Duser.timezone=UTC',
+  // UTF-8 everywhere, always
+  "-Dfile.encoding=UTF-8", 
+  // for consistency, rather than any specific reason 
+  "-Duser.language=", "-Duser.country=", "-Duser.variant=",
+]
+
 dependencies{
   implementation 'org.springframework:spring-webmvc:5.3.4'
 
@@ -35,6 +64,8 @@ dependencies{
   
   // JSON stuff
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.2'
+
+//  implementation 'com.auth0:auth0-spring-security-api:1.4.1'
   
   testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
   testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'

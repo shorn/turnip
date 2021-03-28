@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.TimeZone;
 
 /* Code taken from 
  https://auth0.com/blog/spring-5-embedded-tomcat-8-gradle-tutorial/ 
@@ -20,7 +21,7 @@ public class App {
   private static final int PORT = 8080;
 
   public static void main(String... args) throws Exception {
-    log.info("main() called");
+    log.info("main() called, timezone={}", TimeZone.getDefault().getID());
 
     Server server = new Server();
 
