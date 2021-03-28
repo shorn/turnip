@@ -23,7 +23,7 @@ public class App {
     // Will be called when pressing ctrl-c, for example.
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       jetty.shutdown();
-    }, "turnip-shutdown"));
+    }, "app-shutdown"));
     
     jetty.startJoin();
   }

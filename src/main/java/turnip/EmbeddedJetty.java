@@ -13,7 +13,6 @@ import javax.servlet.ServletContainerInitializer;
 public class EmbeddedJetty {
 
   private Logger log = LoggerFactory.getLogger(getClass());
-  
   private Server server = new Server();
 
   public void addServletContainerInitializer(ServletContainerInitializer init) {
@@ -36,6 +35,8 @@ public class EmbeddedJetty {
 
   public void startJoin() throws Exception {
     server.start();
+
+    // Don't know why I'm doing this - cargo culted it
     server.join();
   }
 
