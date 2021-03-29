@@ -19,7 +19,7 @@ import java.util.Set;
 @EnableWebMvc
 @ComponentScan(basePackages = {"turnip"})
 @PropertySource(
-  value = "file:///${user.home}/.turnip/env.properties",
+  value = "file:///${user.home}/.config/turnip/env.properties",
   ignoreResourceNotFound = true)
 public class SpringAppConfig implements ServletContainerInitializer {
   private static Logger log = LoggerFactory.getLogger(App.class);
