@@ -5,6 +5,7 @@ import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,14 @@ import javax.servlet.ServletContainerInitializer;
 public class EmbeddedJetty {
 
   private Logger log = LoggerFactory.getLogger(getClass());
-  private Server server = new Server();
+  private Server server;
+
+  public EmbeddedJetty() {
+    QueuedThreadPool qtp = new QueuedThreadPool();
+    // by default its "qtp${hashcode}", I like this better
+    qtp.setName("Jetty");
+    server = new Server(qtp);
+  }
 
   public void addServletContainerInitializer(ServletContainerInitializer init) {
     ServletContextHandler contextHandler = new ServletContextHandler();
@@ -24,9 +32,8 @@ public class EmbeddedJetty {
   public void configureHttpConnector(int port) {
     HttpConnectionFactory connectionFactory = new HttpConnectionFactory();
 
-    // don't return the server version header
-    connectionFactory.getHttpConfiguration().setSendServerVersion(true);
-
+    // don't return the server version header - "because security"
+    connectionFactory.getHttpConfiguration().setSendServerVersion(false);
     ServerConnector connector = new ServerConnector(server, connectionFactory);
     connector.setPort(port);
 
@@ -36,7 +43,7 @@ public class EmbeddedJetty {
   public void startJoin() throws Exception {
     server.start();
 
-    // Don't know why I'm doing this - cargo culted it
+    // Don't know why I'm doing this - proud member of the cargo cult
     server.join();
   }
 
