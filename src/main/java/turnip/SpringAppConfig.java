@@ -18,7 +18,18 @@ import java.util.Set;
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {"turnip"})
-@PropertySource(
+/* Simplest production deployment is to just dump the uberJar and 
+config in a directory and run the Java command from that directory.
+It's possible to maintain multiple different configurations on the same 
+machine by putting config in separate directories and executing from those 
+directories. I'd use Docker to encapsulate in a real setup, but this can be
+useful on dev machines to maintain multiple configurations. */
+@PropertySource(name = "working_dir_environment",
+  value = "./env.properties",
+  ignoreResourceNotFound = true)
+/* During standard development cycle, use hardcoded default XDG location for 
+config files. IMPROVE: use XDG_CONFIG_HOME env variable */
+@PropertySource(name = "user_config_environment",
   value = "file:///${user.home}/.config/turnip/env.properties",
   ignoreResourceNotFound = true)
 public class SpringAppConfig implements ServletContainerInitializer {
@@ -35,7 +46,7 @@ public class SpringAppConfig implements ServletContainerInitializer {
 
   public static void initSpring(ServletContext ctx) {
     // Create the 'root' Spring application context
-    AnnotationConfigWebApplicationContext rootContext = 
+    AnnotationConfigWebApplicationContext rootContext =
       new AnnotationConfigWebApplicationContext();
     rootContext.register(SpringAppConfig.class);
 
@@ -43,12 +54,12 @@ public class SpringAppConfig implements ServletContainerInitializer {
     ctx.addListener(new ContextLoaderListener(rootContext));
 
     // Create the dispatcher servlet's Spring application context
-    AnnotationConfigWebApplicationContext dispatcherContext = 
+    AnnotationConfigWebApplicationContext dispatcherContext =
       new AnnotationConfigWebApplicationContext();
 
     // Register and map the dispatcher servlet
     ServletRegistration.Dynamic dispatcher = ctx.addServlet(
-      "dispatcher", new DispatcherServlet(dispatcherContext) );
+      "dispatcher", new DispatcherServlet(dispatcherContext));
     dispatcher.setLoadOnStartup(1);
     dispatcher.addMapping("/");
   }

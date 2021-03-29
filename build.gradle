@@ -34,6 +34,7 @@ tasks.withType(Test) {
 }
 tasks.withType(JavaExec) {
 //  jvmArgs += ""
+//  environment << ["":""]
 }
 
 dependencies{
@@ -74,7 +75,6 @@ applicationDefaultJvmArgs = [
   // for consistency, rather than any specific reason 
   "-Duser.language=", "-Duser.country=", "-Duser.variant=",
 ]
-
 
 test{
   useJUnitPlatform()
