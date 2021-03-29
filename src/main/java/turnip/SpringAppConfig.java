@@ -15,6 +15,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
 import java.util.Set;
 
+import static java.util.Collections.emptySet;
+
 @Configuration
 @EnableWebMvc
 @ComponentScan(basePackages = {"turnip"})
@@ -50,10 +52,13 @@ public class SpringAppConfig implements ServletContainerInitializer {
       new AnnotationConfigWebApplicationContext();
     rootContext.register(SpringAppConfig.class);
 
+    // probs not necessary if Spring http config is set to STATELESS 
+    ctx.setSessionTrackingModes(emptySet());
+    
     // Manage the lifecycle of the root application context
     ctx.addListener(new ContextLoaderListener(rootContext));
 
-    // Create the dispatcher servlet's Spring application context
+    // Create the DispatcherServlet application context
     AnnotationConfigWebApplicationContext dispatcherContext =
       new AnnotationConfigWebApplicationContext();
 
