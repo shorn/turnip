@@ -56,7 +56,7 @@ dependencies{
   // Spring doesn't yet support Servlet 5 (i.e. pkg: jakarta.servlet)
   compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
   
-  // add support for JSON serialization for Spring endpoints
+  // support for JSON serialization for Spring endpoints
   // can this be "runtimeOnly"?
   implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.2'
   
@@ -68,16 +68,12 @@ dependencies{
   // pkg: org.sf.security.web
   implementation 'org.springframework.security:spring-security-web:5.4.5'
   
-  // support configuring through code - pkg: org.sf.security.config
+  // for configuring through code - pkg: org.sf.security.config
   implementation 'org.springframework.security:spring-security-config:5.4.5'
 
-//  implementation 'com.auth0:auth0-spring-security-api:1.4.1'
+  // integrate Auth0 JWT into spring-security  
+  implementation 'com.auth0:auth0-spring-security-api:1.4.1'
 
-//  implementation 'org.springframework.security:spring-security-oauth2-core:5.4.5'
-//  implementation 'org.springframework.security:spring-security-oauth2-client:5.4.5'
-//  implementation 'org.springframework.security:spring-security-oauth2-jose:5.4.5'
-//  implementation 'org.springframework.security:spring-security-oauth2-resource-server:5.4.5'
-  
 //  testImplementation 'org.springframework.security:spring-security-test:5.4.5'
 
   //  implementation("com.google.guava:guava:30.1.1-jre")
