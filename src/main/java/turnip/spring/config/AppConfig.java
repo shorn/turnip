@@ -9,16 +9,11 @@ import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import turnip.App;
-import turnip.util.Log;
 
-import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRegistration;
-import java.util.Set;
 
 import static java.util.Collections.emptySet;
-import static turnip.util.Log.to;
 
 @Configuration
 @EnableWebMvc
@@ -38,26 +33,17 @@ config files. IMPROVE: use XDG_CONFIG_HOME env variable */
 @PropertySource(name = "user_config_environment",
   value = "file:///${user.home}/.config/turnip/env.properties",
   ignoreResourceNotFound = true)
-public class SpringAppConfig implements ServletContainerInitializer {
-  private static Log log = to(App.class);
+public class AppConfig {
 
-  @Override
-  public void onStartup(
-    Set<Class<?>> classes,
-    ServletContext ctx
-  ) {
-    initSpring(ctx);
-  }
-
-  public static void initSpring(ServletContext ctx) {
+  public static void initServletContext(ServletContext ctx) {
     // Create the 'root' Spring application context
     AnnotationConfigWebApplicationContext rootContext =
       new AnnotationConfigWebApplicationContext();
-    rootContext.register(SpringAppConfig.class);
-    
+    rootContext.register(AppConfig.class);
+
     // probs not necessary if Spring http config is set to STATELESS 
     ctx.setSessionTrackingModes(emptySet());
-    
+
     // Manage the lifecycle of the root application context
     ctx.addListener(new ContextLoaderListener(rootContext));
 

@@ -1,8 +1,6 @@
 package turnip.util;
 
 
-import org.springframework.lang.Nullable;
-
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -10,19 +8,19 @@ import static turnip.util.StringUtil.convertToString;
 
 
 /**
- * Util function to evaluate "guard clauses" if the condition is true method
- * will return, if false method will throw a runtime exception.
- * Used to be called "check" but that word is now used for methods that return
- * boolean or a list of problems (consisitent with Spring validations, etc.)
- * For complicated argument lists, "messages" come first, then other args go 
- * further to the right - for consistency with methods that check multiple args 
- * with a varargs param.
+ Util function to evaluate "guard clauses" if the condition is true method
+ will return, if false method will throw a runtime exception.
+ Used to be called "check" but that word is now used for methods that return
+ boolean or a list of problems (consisitent with Spring validations, etc.)
+ For complicated argument lists, "messages" come first, then other args go
+ further to the right - for consistency with methods that check multiple args
+ with a varargs param.
  */
 public class Guard {
   public static void hasValue(
     @Nullable String message,
-    @Nullable String value)
-  {
+    @Nullable String value
+  ) {
     if( !StringUtil.hasValue(value) ){
       throw new IllegalArgumentException(
         "check failed, no value present: " + StringUtil.nullToEmpty(message));
@@ -31,8 +29,8 @@ public class Guard {
 
   public static void areEqual(
     @Nullable String left,
-    @Nullable String right)
-  {
+    @Nullable String right
+  ) {
     //noinspection StringEquality
     if( left == right ){
       return;
@@ -41,14 +39,14 @@ public class Guard {
     if( !StringUtil.areEqual(left, right) ){
       throw ExceptionUtil.createIllegalArgException(
         "check failed, values are not equal - left=%s right=%s",
-        left, right );
+        left, right);
     }
   }
 
   public static void areEqual(
     @Nullable Integer left,
-    @Nullable Integer right)
-  {
+    @Nullable Integer right
+  ) {
     //noinspection NumberEquality
     if( left == right ){
       return;
@@ -57,15 +55,15 @@ public class Guard {
     if( !ObjectUtil.areEqual(left, right) ){
       throw ExceptionUtil.createIllegalArgException(
         "check failed, values are not equal - left=%s right=%s",
-        left, right );
+        left, right);
     }
   }
 
   public static void areEqual(
     String msg,
     @Nullable Integer left,
-    @Nullable Integer right)
-  {
+    @Nullable Integer right
+  ) {
     //noinspection NumberEquality
     if( left == right ){
       return;
@@ -78,8 +76,8 @@ public class Guard {
 
   public static void isBlank(
     @Nullable String message,
-    @Nullable String value)
-  {
+    @Nullable String value
+  ) {
     if( !StringUtil.isBlank(value) ){
       throw new IllegalArgumentException(
         "check failed, not blank: " + StringUtil.nullToEmpty(message));
@@ -93,24 +91,24 @@ public class Guard {
     }
   }
 
-  public static void hasValue(String msg, List<String> v){
+  public static void hasValue(String msg, List<String> v) {
     Guard.notNull(msg, v);
     Guard.isTrue(msg, !v.isEmpty());
     Guard.allHaveValue(msg, v.toArray(new String[0]));
   }
 
   /**
-   * Checks that there is at least one string with a value in the give args.
-   *
-   * @param args if this is null or empty, method will throw exception
+   Checks that there is at least one string with a value in the give args.
+
+   @param args if this is null or empty, method will throw exception
    */
   public static void anyHasValue(
     @Nullable String message,
-    @Nullable String... args)
-  {
+    @Nullable String... args
+  ) {
     if( args == null ){
       throw new IllegalArgumentException(
-        "null arg array passed: " + StringUtil.nullToEmpty(message) );
+        "null arg array passed: " + StringUtil.nullToEmpty(message));
     }
 
     for( String iValue : args ){
@@ -119,13 +117,14 @@ public class Guard {
       }
     }
     throw new IllegalArgumentException(
-      "none of the passes arguments had a value: " + StringUtil.nullToEmpty(message) );
+      "none of the passes arguments had a value: " + StringUtil.nullToEmpty(
+        message));
   }
 
   public static void allHaveValue(
     @Nullable String message,
-    @Nullable String... args)
-  {
+    @Nullable String... args
+  ) {
     if( args == null ){
       throw failedCheck("null arg array passed: %s", message);
     }
@@ -135,41 +134,41 @@ public class Guard {
       if( !StringUtil.hasValue(iValue) ){
         throw failedCheck(
           "element %d of the args did not have value: %s",
-          i, StringUtil.nullToEmpty(message) );
+          i, StringUtil.nullToEmpty(message));
       }
     }
   }
 
-  public static void notNull(@Nullable String message, @Nullable Object value){
+  public static void notNull(@Nullable String message, @Nullable Object value) {
     if( value == null ){
       throw failedCheck("null value: %s", message);
     }
   }
 
-  public static void notNull(Object value){
+  public static void notNull(Object value) {
     if( value == null ){
       throw failedCheck("null value was given");
     }
   }
 
-  public static void allNotNull(@Nullable String message, Object... values){
+  public static void allNotNull(@Nullable String message, Object... values) {
     for( Object iValue : values ){
       if( iValue == null ){
         throw failedCheck("one of the passed args is null: %s", message);
       }
     }
   }
-  
+
   public static void isTrue(
     boolean condition
-  ){
+  ) {
     isTrue((String) null, condition);
   }
-  
+
   public static void isTrue(
     String message,
     boolean condition
-  ){
+  ) {
     if( !condition ){
       if( message != null ){
         throw failedCheck("condition returned false: %s", message);
@@ -179,11 +178,11 @@ public class Guard {
       }
     }
   }
-  
+
   public static void isTrue(
     Supplier<String> message,
     boolean condition
-  ){
+  ) {
     if( !condition ){
       throw failedCheck("condition returned false: %s", message.get());
     }
@@ -191,8 +190,8 @@ public class Guard {
 
   public static void isTrue(
     Supplier<String> message,
-    Supplier<Boolean> condition)
-  {
+    Supplier<Boolean> condition
+  ) {
     notNull("can't pass a null condition check", condition);
     Boolean result = condition.get();
     notNull("condition predicate can't return null", result);
@@ -208,12 +207,12 @@ public class Guard {
   }
 
   /**
-   * @param message {@link String#format(String, Object...)} format
+   @param message {@link String#format(String, Object...)} format
    */
   public static IllegalArgumentException failedCheck(
     String message,
-    Object... args)
-  {
+    Object... args
+  ) {
     if( message == null ){
       if( args != null && args.length != 0 ){
         return new IllegalArgumentException(convertToString(args));

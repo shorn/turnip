@@ -1,6 +1,6 @@
 package turnip.util;
 
-import org.springframework.lang.Nullable;
+
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,14 +12,14 @@ import static java.util.stream.Collectors.joining;
 import static turnip.util.ObjectUtil.nullToDefault;
 
 /**
- * Centralise handling of strings here, so definitions are consistent and don't
- * change unless we want them to (tools such as commons and guava have changed
- * their definitions before).
- * <p>
- * No method in this class should ever return null, use optional instead. If a
- * param is annotated with @Nullable, then the method must handle that and
- * should probably document what it does - otherwise all methods any method is
- * allowed to fail if you pass null for a param that is not marked nullable.
+ Centralise handling of strings here, so definitions are consistent and don't
+ change unless we want them to (tools such as commons and guava have changed
+ their definitions before).
+ <p>
+ No method in this class should ever return null, use optional instead. If a
+ param is annotated with @Nullable, then the method must handle that and
+ should probably document what it does - otherwise all methods any method is
+ allowed to fail if you pass null for a param that is not marked nullable.
  */
 public final class StringUtil {
   public static final int DEFAULT_MAX_ELEMENTS_TO_STRING = 20;
@@ -27,19 +27,19 @@ public final class StringUtil {
   public static final String COMMA_SPACE = ", ";
 
   /**
-   * Null is not a value.  Empty string is not a value.  Whitespace is not a
-   * value.
+   Null is not a value.  Empty string is not a value.  Whitespace is not a
+   value.
    */
   public static boolean hasValue(String target) {
     return !isBlank(target);
   }
 
-  public static boolean isNullOrEmpty(String string){
+  public static boolean isNullOrEmpty(String string) {
     return string == null || string.isEmpty();
   }
-  
+
   /**
-   * Null is blank. Empty string is blank.  All whitespace is blank.
+   Null is blank. Empty string is blank.  All whitespace is blank.
    */
   public static boolean isBlank(String target) {
     if( isNullOrEmpty(target) ){
@@ -50,24 +50,24 @@ public final class StringUtil {
 
 
   /**
-   * <p>Checks if the CharSequence contains only whitespace.</p>
-   *
-   * <p>{@code null} will return {@code false}.
-   * An empty CharSequence (length()=0) will return {@code true}.</p>
-   *
-   * <pre>
-   * StringUtils.isWhitespace(null)   = false
-   * StringUtils.isWhitespace("")     = true
-   * StringUtils.isWhitespace("  ")   = true
-   * StringUtils.isWhitespace("abc")  = false
-   * StringUtils.isWhitespace("ab2c") = false
-   * StringUtils.isWhitespace("ab-c") = false
-   * </pre>
-   *
-   * @param cs  the CharSequence to check, may be null
-   * @return {@code true} if only contains whitespace, and is non-null
-   * @implNote This was taken from the commons-lang 3 source base, I didn't
-   * want to have to include all of cl-3 just for that one method.
+   <p>Checks if the CharSequence contains only whitespace.</p>
+
+   <p>{@code null} will return {@code false}.
+   An empty CharSequence (length()=0) will return {@code true}.</p>
+
+   <pre>
+   StringUtils.isWhitespace(null)   = false
+   StringUtils.isWhitespace("")     = true
+   StringUtils.isWhitespace("  ")   = true
+   StringUtils.isWhitespace("abc")  = false
+   StringUtils.isWhitespace("ab2c") = false
+   StringUtils.isWhitespace("ab-c") = false
+   </pre>
+
+   @param cs the CharSequence to check, may be null
+   @return {@code true} if only contains whitespace, and is non-null
+   @implNote This was taken from the commons-lang 3 source base, I didn't
+   want to have to include all of cl-3 just for that one method.
    */
   public static boolean isWhitespace(@Nullable CharSequence cs) {
     if (cs == null) {
@@ -81,13 +81,13 @@ public final class StringUtil {
     }
     return true;
   }
-  
+
   /**
-   * The behaviour with elements that are null or empty is unspecified (see unit
-   * tests) - bad idea to depend on current behaviour unless you document and
-   * write tests.
-   *
-   * @param args returns empty string if null or empty
+   The behaviour with elements that are null or empty is unspecified (see unit
+   tests) - bad idea to depend on current behaviour unless you document and
+   write tests.
+
+   @param args returns empty string if null or empty
    */
   public static String formatCommaSeparated(@Nullable String... args) {
     if( args == null || args.length == 0 ){
@@ -97,10 +97,10 @@ public final class StringUtil {
   }
 
   /**
-   * Convert the args to a string with converter - be careful of nulls, you
-   * risk NPE's if you just use Object::toString.
-   * <p/>
-   * Not sure about the safevarargs thing, need to investigate.
+   Convert the args to a string with converter - be careful of nulls, you
+   risk NPE's if you just use Object::toString.
+   <p/>
+   Not sure about the safevarargs thing, need to investigate.
    */
   private static <T> String convertToString(
     Function<T, String> converter,
@@ -205,10 +205,10 @@ public final class StringUtil {
   }
 
   /**
-   * Removes the suffix, if present, from the target string.
-   *
-   * @param target returns empty string if null
-   * @param suffix returns target string if null
+   Removes the suffix, if present, from the target string.
+
+   @param target returns empty string if null
+   @param suffix returns target string if null
    */
   public static String removeSuffix(
     @Nullable String target,
@@ -229,10 +229,10 @@ public final class StringUtil {
   }
 
   /**
-   * Removes the prefix, if present, from the target string.
-   *
-   * @param target returns empty string if null
-   * @param prefix returns target string if null
+   Removes the prefix, if present, from the target string.
+
+   @param target returns empty string if null
+   @param prefix returns target string if null
    */
   public static String removePrefix(
     @Nullable String target,
@@ -253,11 +253,10 @@ public final class StringUtil {
   }
 
   /**
-   * returns true if every element passed in has a value.
-   *
-   * @param values if null or empty will return false
-   *
-   * @see #hasValue(String)
+   returns true if every element passed in has a value.
+
+   @param values if null or empty will return false
+   @see #hasValue(String)
    */
   public static boolean allElementsHaveValues(@Nullable String... values) {
     if( values == null || values.length == 0 ){
@@ -274,11 +273,10 @@ public final class StringUtil {
   }
 
   /**
-   * returns true if any element passed in has a value.
-   *
-   * @param values if null or empty will return false
-   *
-   * @see #hasValue(String)
+   returns true if any element passed in has a value.
+
+   @param values if null or empty will return false
+   @see #hasValue(String)
    */
   public static boolean anyElementHasValue(@Nullable String... values) {
     if( values == null || values.length == 0 ){
@@ -294,18 +292,16 @@ public final class StringUtil {
     return false;
   }
 
-  /**
-   * @return returns empty string if null is passed, otherwise returns value
-   */
+  /** @return returns empty string if null is passed, otherwise returns value */
   public static String nullToEmpty(@Nullable String value) {
     return (value == null ? "" : value);
   }
 
   /**
-   * Wraps a ternary around {@link #isBlank(String)}
-   *
-   * @return will not return null, if null is passed defaultValue and a default
-   * value is needed, will use empty string instead).
+   Wraps a ternary around {@link #isBlank(String)}
+
+   @return will not return null, if null is passed defaultValue and a default
+   value is needed, will use empty string instead).
    */
   public static String blankToDefault(
     @Nullable String value,
@@ -314,9 +310,7 @@ public final class StringUtil {
     return (isBlank(value) ? nullToEmpty(defaultValue) : value);
   }
 
-  /**
-   * @return true if both values are null
-   */
+  /** @return true if both values are null */
   @SuppressWarnings("StringEquality")
   public static boolean equalsIgnoreCase(
     @Nullable String l,
@@ -348,9 +342,7 @@ public final class StringUtil {
     return l.trim().equalsIgnoreCase(r.trim());
   }
 
-  /**
-   * @return true if both values are null
-   */
+  /** @return true if both values are null */
   @SuppressWarnings("StringEquality")
   public static boolean areEqual(
     @Nullable String l,
@@ -381,11 +373,10 @@ public final class StringUtil {
     return false;
   }
   
-  public static boolean 
-  equalsAnyIgnoreCase(
+  public static boolean equalsAnyIgnoreCase(
     @Nullable String l,
-    String... rValues)
-  {
+    String... rValues
+  ) {
     for( String r : rValues ){
       if( equalsIgnoreCase(l, r) ){
         return true;
@@ -411,9 +402,9 @@ public final class StringUtil {
   }
 
   /**
-   * @return does not return null; generally speaking, if it's a weird case 
-   * you'll get back empty string; even if passed two null values it will 
-   * give you empty string.
+   @return does not return null; generally speaking, if it's a weird case
+   you'll get back empty string; even if passed two null values it will
+   give you empty string.
    */
   public static String subtract(
     @Nullable String value, 

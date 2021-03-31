@@ -1,8 +1,6 @@
 package turnip.util;
 
 
-import org.springframework.lang.Nullable;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,109 +8,103 @@ import static turnip.util.StringUtil.isBlank;
 
 
 /**
- * Creation methods use String format (%s).
- * <p/>
- * Could also consider adding lambda support for the formatting and doing our
- * own log level check.
- * <p/>
- * Don't create "load and warn" type methods, the app server will log the 
- * message of any exception thrown, lets' not log them repeatedly.
+ Creation methods use String format (%s).
+ <p/>
+ Could also consider adding lambda support for the formatting and doing our
+ own log level check.
+ <p/>
+ Don't create "load and warn" type methods, the app server will log the
+ message of any exception thrown, lets' not log them repeatedly.
  */
 public class ExceptionUtil {
 
   /**
-   * Creates a new RuntimeException.
-   *
-   * @param format {@link String#format(String, Object...)} - ("%s")
+   Creates a new RuntimeException.
+
+   @param format {@link String#format(String, Object...)} - ("%s")
    */
   public static RuntimeException createRuntimeException(
     String format,
-    Object... args)
-  {
-    return new RuntimeException( String.format(format, args));
+    Object... args) {
+    return new RuntimeException(String.format(format, args));
   }
 
   /**
-   * Creates a new {@link ApiSafeException}.
-   *
-   * @param format {@link String#format(String, Object...)} - ("%s")
+   Creates a new {@link ApiSafeException}.
+
+   @param format {@link String#format(String, Object...)} - ("%s")
    */
   public static ApiSafeException createApiSafeException(
     String format,
-    Object... args)
-  {
+    Object... args) {
     return new ApiSafeException(String.format(format, args));
   }
 
   public static ApiSafeException createNoRetryApiSafeException(
     String format,
-    Object... args)
-  {
+    Object... args) {
     return new ApiSafeException(String.format(format, args));
   }
 
   /**
-   * Creates a new IllegalArgumentException.
-   *
-   * @param format {@link String#format(String, Object...)} - ("%s")
+   Creates a new IllegalArgumentException.
+
+   @param format {@link String#format(String, Object...)} - ("%s")
    */
   public static IllegalArgumentException createIllegalArgException(
     String format,
-    Object... args)
-  {
-    return new IllegalArgumentException( String.format(format, args));
+    Object... args) {
+    return new IllegalArgumentException(String.format(format, args));
   }
 
   /**
-   * Wraps the given Throwable in a new RuntimeException
-   * @param format {@link String#format(String, Object...)} - ("%s")
+   Wraps the given Throwable in a new RuntimeException
+
+   @param format {@link String#format(String, Object...)} - ("%s")
    */
   public static RuntimeException wrapException(
     Throwable t,
     String format,
-    Object... args)
-  {
-    return new RuntimeException( String.format(format, args), t);
+    Object... args) {
+    return new RuntimeException(String.format(format, args), t);
   }
 
   /**
-   * Logs an error with the given mesage and then a separate statement logs the
-   * exception itself.
-   *
-   * @param format {@link String#format(String, Object...)} - ("%s")
+   Logs an error with the given mesage and then a separate statement logs the
+   exception itself.
+
+   @param format {@link String#format(String, Object...)} - ("%s")
    */
   public static void logError(
     Log log,
     Throwable t,
     String format,
-    Object... args)
-  {
+    Object... args) {
     log.error(format, args);
     log.errorEx("exception", t);
   }
 
   /**
-   * Logs a warning with the given mesage and then a separate statement logs the
-   * exception itself.
-   *
-   * @param format {@link String#format(String, Object...)} - ("%s")
+   Logs a warning with the given mesage and then a separate statement logs the
+   exception itself.
+
+   @param format {@link String#format(String, Object...)} - ("%s")
    */
   public static void logWarn(
     Log log,
     Throwable t,
     String format,
-    Object... args)
-  {
+    Object... args) {
     log.warn(format, args);
     log.warnEx("exception", t);
   }
-  
-  public static Throwable getRootCause(final Throwable throwable){
+
+  public static Throwable getRootCause(final Throwable throwable) {
     final List<Throwable> list = getThrowableList(throwable);
     return list.size() < 2 ? null : list.get(list.size() - 1);
   }
 
-  public static String getRootCauseMessage(@Nullable Throwable t){
+  public static String getRootCauseMessage(@Nullable Throwable t) {
     if( t == null ){
       return "No problem";
     }
@@ -126,7 +118,7 @@ public class ExceptionUtil {
     return rootCause.getMessage();
   }
 
-  public static List<Throwable> getThrowableList(Throwable throwable){
+  public static List<Throwable> getThrowableList(Throwable throwable) {
     final List<Throwable> list = new ArrayList<>();
     while( throwable != null && !list.contains(throwable) ){
       list.add(throwable);
@@ -134,19 +126,19 @@ public class ExceptionUtil {
     }
     return list;
   }
-  
-  public static Throwable getCause(final Throwable throwable){
+
+  public static Throwable getCause(final Throwable throwable) {
     if( throwable == null ){
       return null;
     }
-    
+
     final Throwable cause = throwable.getCause();
     if( cause != null ){
       return cause;
     }
-    
+
     return null;
   }
 
-  
+
 }

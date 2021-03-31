@@ -1,27 +1,24 @@
 package turnip;
 
 import turnip.jetty.EmbeddedJetty;
-import turnip.spring.config.SpringAppConfig;
+import turnip.spring.config.AppConfig;
 import turnip.util.Log;
 
-import java.util.TimeZone;
-
+import static turnip.util.JvmUtil.normaliseJvmDefaults;
 import static turnip.util.Log.to;
 
-/* Code taken from 
- https://auth0.com/blog/spring-5-embedded-tomcat-8-gradle-tutorial/ 
- */
 public class App {
   private static final int PORT = 8080;
   
   private static Log log = to(App.class);
 
   public static void main(String... args) throws Exception {
-    log.info("main() called, timezone={}", TimeZone.getDefault().getID());
-
+    normaliseJvmDefaults();
+    
     EmbeddedJetty jetty = new EmbeddedJetty();
     jetty.configureHttpConnector(PORT);
-    jetty.addServletContainerInitializer(new SpringAppConfig());
+    jetty.addServletContainerInitializer( (sci, ctx) -> 
+        AppConfig.initServletContext(ctx) );
 
     // Will be called when pressing ctrl-c, for example.
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {

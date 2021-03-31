@@ -54,19 +54,19 @@ public class Log {
   }
 
   /**
-   * Creates a category for the class of the given instance.
+   Creates a category for the class of the given instance.
    */
   public static Log toInstance(Object category){
     return new Log(LoggerFactory.getLogger(category.getClass()));
   }
 
   /**
-   * This method should only be called from static initialiser blocks.
-   * It's intended for doing very little "bootstrap" logging during lambda 
-   * creation.
-   * <p>
-   * Look for logging from static contexts in cloudwatch, 
-   * it won't show up in the AWS console when doing test executions.
+   This method should only be called from static initialiser blocks.
+   It's intended for doing very little "bootstrap" logging during lambda
+   creation.
+   <p>
+   Look for logging from static contexts in cloudwatch,
+   it won't show up in the AWS console when doing test executions.
    */
   public static void staticLog(String msg, Object... args){
     System.out.println(String.format(msg, args));

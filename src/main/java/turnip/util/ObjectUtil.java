@@ -1,6 +1,6 @@
 package turnip.util;
 
-import org.springframework.lang.Nullable;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +19,7 @@ import static java.util.stream.Collectors.toList;
 public final class ObjectUtil {
 
   /**
-   * @return returns empty string if null is passed, otherwise returns value
+   @return returns empty string if null is passed, otherwise returns value
    */
   public static <T> T nullToDefault(@Nullable T value, T defaultValue) {
     return (value == null ? defaultValue : value);
