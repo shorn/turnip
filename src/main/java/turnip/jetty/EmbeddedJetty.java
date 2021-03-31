@@ -1,4 +1,4 @@
-package turnip;
+package turnip.jetty;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConnectionFactory;
@@ -23,10 +23,10 @@ public class EmbeddedJetty {
     server = new Server(qtp);
   }
 
-  public void addServletContainerInitializer(ServletContainerInitializer init) {
+  public void addServletContainerInitializer(ServletContainerInitializer sci) {
     ServletContextHandler contextHandler = new ServletContextHandler();
     server.setHandler(contextHandler);
-    contextHandler.addServletContainerInitializer(init);
+    contextHandler.addServletContainerInitializer(sci);
   }
 
   public void configureHttpConnector(int port) {
@@ -50,7 +50,7 @@ public class EmbeddedJetty {
   public void shutdown() {
     if( !server.isStarted() ){
       // e.g. could not bind listen address
-      log.info("Turnip shutdown requested, but Jetty not yet started");
+      log.info("Turnip shutdown requested before Jetty was started");
       return;
     }
 

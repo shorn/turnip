@@ -1,14 +1,16 @@
-package turnip;
+package turnip.spring.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.context.AbstractSecurityWebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import turnip.App;
+import turnip.util.Log;
 
 import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
@@ -16,10 +18,12 @@ import javax.servlet.ServletRegistration;
 import java.util.Set;
 
 import static java.util.Collections.emptySet;
+import static turnip.util.Log.to;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = {"turnip"})
+@EnableWebSecurity
+@ComponentScan(basePackages = {"turnip.controller", "turnip.spring.config"})
 /* Simplest production deployment is to just dump the uberJar and 
 config in a directory and run the Java command from that directory.
 It's possible to maintain multiple different configurations on the same 
@@ -35,14 +39,13 @@ config files. IMPROVE: use XDG_CONFIG_HOME env variable */
   value = "file:///${user.home}/.config/turnip/env.properties",
   ignoreResourceNotFound = true)
 public class SpringAppConfig implements ServletContainerInitializer {
-  private static Logger log = LoggerFactory.getLogger(App.class);
+  private static Log log = to(App.class);
 
   @Override
   public void onStartup(
     Set<Class<?>> classes,
     ServletContext ctx
   ) {
-    log.info("onStartup() called");
     initSpring(ctx);
   }
 
@@ -51,7 +54,7 @@ public class SpringAppConfig implements ServletContainerInitializer {
     AnnotationConfigWebApplicationContext rootContext =
       new AnnotationConfigWebApplicationContext();
     rootContext.register(SpringAppConfig.class);
-
+    
     // probs not necessary if Spring http config is set to STATELESS 
     ctx.setSessionTrackingModes(emptySet());
     
@@ -67,7 +70,12 @@ public class SpringAppConfig implements ServletContainerInitializer {
       "dispatcher", new DispatcherServlet(dispatcherContext));
     dispatcher.setLoadOnStartup(1);
     dispatcher.addMapping("/");
+
+    /* Dunno why, but Spring doesn't find WebApplicationInitializer 
+    interfaces automatically, so we have to call onStartup() directly. */
+    new AbstractSecurityWebApplicationInitializer(){}.onStartup(ctx);
   }
+
 }
 
 
