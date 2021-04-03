@@ -297,6 +297,12 @@ public final class StringUtil {
     return (value == null ? "" : value);
   }
 
+  /** @return returns empty string if null is passed, otherwise returns 
+  toString() */
+  public static String nullToString(@Nullable Object value) {
+    return (value == null ? "" : value.toString());
+  }
+
   /**
    Wraps a ternary around {@link #isBlank(String)}
 

@@ -1,5 +1,8 @@
-package turnip.util;
+package turnip.spring.security;
 
+
+import turnip.util.ExceptionUtil;
+import turnip.util.Log;
 
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -71,5 +74,14 @@ public class ApiSafeException extends RuntimeException {
       throw converter.get();
     }
   }
-  
+
+  /**
+   Creates a new {@link ApiSafeException}.
+
+   @param format {@link String#format(String, Object...)} - ("%s")
+   */
+  public static ApiSafeException format(String format, Object... args) {
+    return new ApiSafeException(String.format(format, args));
+  }
+
 }

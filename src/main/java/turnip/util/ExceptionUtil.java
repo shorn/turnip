@@ -30,23 +30,6 @@ public class ExceptionUtil {
   }
 
   /**
-   Creates a new {@link ApiSafeException}.
-
-   @param format {@link String#format(String, Object...)} - ("%s")
-   */
-  public static ApiSafeException createApiSafeException(
-    String format,
-    Object... args) {
-    return new ApiSafeException(String.format(format, args));
-  }
-
-  public static ApiSafeException createNoRetryApiSafeException(
-    String format,
-    Object... args) {
-    return new ApiSafeException(String.format(format, args));
-  }
-
-  /**
    Creates a new IllegalArgumentException.
 
    @param format {@link String#format(String, Object...)} - ("%s")

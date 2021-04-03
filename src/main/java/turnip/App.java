@@ -8,7 +8,7 @@ import static turnip.util.JvmUtil.normaliseJvmDefaults;
 import static turnip.util.Log.to;
 
 public class App {
-  private static final int PORT = 8080;
+  public static final int PORT = 8080;
   
   private static Log log = to(App.class);
 

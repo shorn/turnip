@@ -4,7 +4,11 @@ package turnip.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.function.Supplier;
+
+import static turnip.util.StringUtil.nullToString;
 
 /** Wraps slf4j Logger.
  Originally, this came from a project where code might run in ans AWS Lambda
@@ -193,4 +197,60 @@ public class Log {
     return re;
   }
 
+  public LogMessageBuiler msg(String msg, Object... args){
+    return new LogMessageBuiler(this, msg, args);
+  }
+  
+  /* world's dodgiest structured logging API - seriously, no thought went into
+   this at all */
+  public static class LogMessageBuiler {
+
+    private Log log;
+    private String msg;
+    private Object[] messageArgs;
+    private Map<String, Object> otherArgs;
+
+    public LogMessageBuiler(Log log, String msg, Object... messageArgs) {
+      this.log = log;
+      this.msg = msg;
+      this.messageArgs = messageArgs;
+      // for ordering
+      this.otherArgs = new TreeMap<>();
+    }
+
+    public LogMessageBuiler with(String name, Object value){
+      otherArgs.put(name, value);
+      return this;
+    }
+
+    public void info() {
+      if( !log.isInfoEnabled() ){
+        return;
+      }
+      log.log.info(this.toString());
+    }
+
+    public void debug(){
+      if( !log.isDebugEnabled() ){
+        return;
+      }
+      log.log.debug(this.toString());
+    }
+
+    public void warn(){
+      if( !log.log.isWarnEnabled() ){
+        return;
+      }
+      log.log.warn(this.toString());
+    }
+
+    @Override
+    public String toString() {
+      String message = String.format(msg, messageArgs);
+      StringBuilder sb = new StringBuilder(message).append(" - ");
+      otherArgs.forEach((key, value) -> 
+        sb.append(key).append("=").append(nullToString(value)).append(" "));
+      return sb.toString();
+    }
+  }
 }

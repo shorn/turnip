@@ -1,10 +1,13 @@
 package turnip.spring.config;
 
-import com.auth0.spring.security.api.JwtWebSecurityConfigurer;
+import com.auth0.jwk.JwkProvider;
+import com.auth0.jwk.JwkProviderBuilder;
+import com.auth0.spring.security.api.BearerSecurityContextRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import turnip.spring.security.TurnipAuthenticationProvider;
 import turnip.util.Guard;
 import turnip.util.Log;
 
@@ -15,6 +18,7 @@ import static turnip.util.Log.to;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   public static final String API = "/api";
   public static final String PUBLIC = "/public";
+  public static final String AUDIENCE_PROP_NAME = "auth0.audience";
 
   private static Log log = to(WebSecurityConfig.class);
 
@@ -25,28 +29,43 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   /** The "issuer of the JWT" - i.e. the system that issued the JWT to the JWT
    to the bearer. */
   private String issuer;
-  
+  private long leeway;
+
   public WebSecurityConfig(
-    @Value("${auth0.audience:https://localhost:8080}") String audience, 
-    @Value("${auth0.issuer:https://rabbit-turnip.us.auth0.com/}") String issuer
+    @Value("${" + AUDIENCE_PROP_NAME + ":https://localhost:8080}") String audience, 
+    @Value("${auth0.issuer:https://rabbit-turnip.us.auth0.com/}") String issuer,
+    @Value("${auth0.leeway:2000}") long leeway
   ) {
-    Guard.hasValue("auth0.audience must be set", audience);
+    log.msg("init").with("audience", audience).with("issuer", issuer).
+      with("leeway", leeway).info();
+    Guard.hasValue(AUDIENCE_PROP_NAME + " must be set", audience);
     Guard.hasValue("auth0.issuer must be set", issuer);
-    log.info("init audience=%s, issuer=%s", audience, issuer);
     this.audience = audience;
     this.issuer = issuer;
+    this.leeway = leeway;
   }
-
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    JwtWebSecurityConfigurer.
-      forRS256(audience, issuer).
-      configure(http).authorizeRequests().
+    final JwkProvider jwkProvider = new JwkProviderBuilder(issuer).build();
+
+    http.
+      authenticationProvider(
+        new TurnipAuthenticationProvider(jwkProvider, issuer, audience).
+          // Otherwise - InvalidClaimException "Token can't be used before ..." 
+          withJwtVerifierLeeway(leeway) ).
+      securityContext().
+        securityContextRepository(new BearerSecurityContextRepository()).
+      and().
+        exceptionHandling().
+      and().authorizeRequests().
         mvcMatchers(API + "/**").fullyAuthenticated().
         mvcMatchers(PUBLIC + "/**").permitAll().
         anyRequest().denyAll().
       and().
-        sessionManagement().sessionCreationPolicy(STATELESS);  
+        httpBasic().disable().
+        csrf().disable().
+        sessionManagement().sessionCreationPolicy(STATELESS);
   }
+
 }

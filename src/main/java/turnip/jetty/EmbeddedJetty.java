@@ -29,7 +29,7 @@ public class EmbeddedJetty {
     contextHandler.addServletContainerInitializer(sci);
   }
 
-  public void configureHttpConnector(int port) {
+  public ServerConnector configureHttpConnector(int port) {
     HttpConnectionFactory connectionFactory = new HttpConnectionFactory();
 
     // don't return the server version header - "because security"
@@ -38,6 +38,8 @@ public class EmbeddedJetty {
     connector.setPort(port);
 
     server.setConnectors(new Connector[]{connector});
+    
+    return connector;
   }
 
   public void startJoin() throws Exception {
@@ -63,5 +65,8 @@ public class EmbeddedJetty {
       log.error("Error while stopping jetty server: " + e.getMessage(), e);
     }
   }
-  
+
+  public Server getServer() {
+    return server;
+  }
 }
