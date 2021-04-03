@@ -112,6 +112,21 @@ test{
   useJUnitPlatform()
   jvmArgs += applicationDefaultJvmArgs
   testLogging.showStandardStreams = true
+
+  include 'turnip/unit/**'
+  
+}
+
+task functionalTest(type:Test){
+  group = "verification"
+  description = "run functional tests - requires config of Auth0 secrets"
+  outputs.upToDateWhen {false}
+
+  useJUnitPlatform()
+  jvmArgs += applicationDefaultJvmArgs
+  testLogging.showStandardStreams = true
+
+  include 'turnip/functional/**'
 }
 
 task uberJar(type: Jar) {

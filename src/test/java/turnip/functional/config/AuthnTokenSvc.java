@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct;
 
 import static java.lang.String.format;
 import static turnip.util.Log.to;
+import static turnip.util.RestUtil.createEntityWithBearer;
 
 @Component
 public class AuthnTokenSvc {
@@ -40,10 +41,16 @@ public class AuthnTokenSvc {
     admin = authenticateUser(props.adminEmail);
 
     log.info("warm up the API server");
-    get(admin, "/api/warmup", String.class);
+    HttpEntity<String> entity = createEntityWithBearer(admin);
+    rest.exchange(turnipApiServerUrl("/api/warmup"),
+      HttpMethod.GET, entity, String.class);
 
   }
 
+  public String turnipApiServerUrl(String url){
+    return format("http://%s%s", props.turnipApiServer, url);
+  }
+  
   /**
    A user with that email, using the sharedPassword is expected to already
    have been created for the test client/audience.
@@ -72,19 +79,6 @@ public class AuthnTokenSvc {
       request, Auth0AuthToken.class);
 
     return response.getBody().access_token;
-  }
-
-  private <T> T get(String authnToken, String url, Class<T> returnType){
-    Guard.notNull(authnToken);
-    HttpHeaders epHeaders = new HttpHeaders();
-    epHeaders.set("Authorization", "bearer "+ authnToken);
-
-    HttpEntity entity = new HttpEntity(epHeaders);
-
-    var epResponse = rest.exchange(format("http://%s%s", props.turnipApiServer, url),
-      HttpMethod.GET, entity, returnType);
-
-    return epResponse.getBody();
   }
 
   public String getUser() {
