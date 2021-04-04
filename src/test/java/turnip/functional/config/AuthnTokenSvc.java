@@ -24,6 +24,7 @@ public class AuthnTokenSvc {
   
   private String user;
   private String admin;
+  private String nonUser;
 
   @Autowired private FuncTestProps props;
   @Autowired private RestTemplate rest;
@@ -39,6 +40,9 @@ public class AuthnTokenSvc {
 
     log.info("load admin authn token");
     admin = authenticateUser(props.adminEmail);
+
+    log.info("load nonUser authn token");
+    nonUser = authenticateUser(props.nonUserEmail);
 
     log.info("warm up the API server");
     HttpEntity<String> entity = createEntityWithBearer(admin);
@@ -87,6 +91,10 @@ public class AuthnTokenSvc {
 
   public String getAdmin() {
     return admin;
+  }
+
+  public String getNonUser() {
+    return nonUser;
   }
 
   static record Auth0AuthToken(

@@ -3,8 +3,12 @@ package turnip.functional;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import turnip.App;
 import turnip.jetty.EmbeddedJetty;
 import turnip.spring.config.AppConfig;
@@ -17,19 +21,25 @@ import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
 import static turnip.spring.config.WebSecurityConfig.AUDIENCE_PROP_NAME;
 import static turnip.util.ExceptionUtil.createRuntimeException;
 import static turnip.util.JvmUtil.normaliseJvmDefaults;
+import static turnip.util.Log.to;
 import static turnip.util.NetUtil.isLocalhostPortAvailable;
 
-public class FunctionalTestExtension implements BeforeAllCallback,
-  ExtensionContext.Store.CloseableResource {
+public class TurnipJettyTestServer 
+implements BeforeAllCallback, 
+  ExtensionContext.Store.CloseableResource 
+{
+  private static Log log = to(TurnipJettyTestServer.class);
 
   private static boolean started = false;
 
   private static ServerConnector serverConnector;
   private static EmbeddedJetty jetty;
+  
+  private Map<RequestMappingInfo, HandlerMethod> turnipApiHandlerMethods;
 
 
   @Override
-  public void beforeAll(ExtensionContext context) throws Exception{
+  public void beforeAll(ExtensionContext context) throws Exception {
     if( !started ){
       started = true;
       initTurnip();
@@ -44,7 +54,7 @@ public class FunctionalTestExtension implements BeforeAllCallback,
   }
 
   public void initTurnip() throws Exception {
-    Log.to(FunctionalTest.class).info("initTurnip()");
+    to(FunctionalTest.class).info("initTurnip()");
     normaliseJvmDefaults();
 
     jetty = new EmbeddedJetty();
@@ -71,12 +81,19 @@ public class FunctionalTestExtension implements BeforeAllCallback,
       propertySources.addLast(new MapPropertySource(
         "functest_source",
         Map.of(AUDIENCE_PROP_NAME, "turnip-functional-test-api")));
+
+      rootContext.addApplicationListener(event -> {
+        if( event instanceof ContextRefreshedEvent ){
+          turnipApiHandlerMethods = rootContext.
+            getBean(RequestMappingHandlerMapping.class).getHandlerMethods();
+        }
+      });
     });
 
     jetty.getServer().start();
   }
 
-  public static void shutdownTurnip(){
+  public static void shutdownTurnip() {
     try {
       jetty.shutdown();
     }
@@ -84,5 +101,12 @@ public class FunctionalTestExtension implements BeforeAllCallback,
       fail("Jetty did not shutdown properly after unit tests", e);
     }
   }
-  
+
+  public Map<RequestMappingInfo, HandlerMethod> getTurnipApiHandlerMethods() {
+    return turnipApiHandlerMethods;
+  }
+
+  public EmbeddedJetty getJetty() {
+    return jetty;
+  }
 }

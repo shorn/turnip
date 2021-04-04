@@ -7,7 +7,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-@ComponentScan(basePackages = {"turnip.functional.config"})
+@ComponentScan(basePackages = {
+  "turnip.functional.config", "turnip.functional.spring.bean"})
 @PropertySource(name = "functest_working_dir_environment",
   value = "./functest.properties",
   ignoreResourceNotFound = true)
@@ -20,6 +21,5 @@ public class FunctionalTestConfig {
   public RestTemplate restTemplate(){
     return new RestTemplate();
   }
-
 
 }

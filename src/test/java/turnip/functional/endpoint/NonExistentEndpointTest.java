@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class NonExistentEndpointTest extends FunctionalTest {
 
   @Test
-  public void nonExistentEndpoint() {
+  public void nonExistentEndpointShould404() {
     try {
       get(token.getUser(), "/api/doesn-not-exist", String.class);
     }

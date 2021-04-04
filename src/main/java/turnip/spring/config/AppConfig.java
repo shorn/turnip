@@ -56,12 +56,10 @@ public class AppConfig {
     // probs not necessary if Spring http config is set to STATELESS 
     ctx.setSessionTrackingModes(emptySet());
 
-    // Create the DispatcherServlet application context
-    AnnotationConfigWebApplicationContext dispatcherContext =
-      new AnnotationConfigWebApplicationContext();
-
-    // Register and map the dispatcher servlet
-    DispatcherServlet servlet = new DispatcherServlet(dispatcherContext);
+    /* Register and map the dispatcher servlet
+     Example code used a separate Spring context of the servlet, but I don't
+     see why that's necessary. */
+    DispatcherServlet servlet = new DispatcherServlet(rootContext);
     // Make sure NoHandlerFound is handled by custom HanlderEexceptionResolver
     servlet.setThrowExceptionIfNoHandlerFound(true);
     ServletRegistration.Dynamic dispatcher = 

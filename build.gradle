@@ -114,7 +114,6 @@ test{
   testLogging.showStandardStreams = true
 
   include 'turnip/unit/**'
-  
 }
 
 task functionalTest(type:Test){
@@ -155,6 +154,6 @@ task uberJar(type: Jar) {
   }
   
   doFirst{
-    println "generating ubrJar to ${archiveFile.get()}"
+    println "generating uberJar to ${archiveFile.get()}"
   }
 }

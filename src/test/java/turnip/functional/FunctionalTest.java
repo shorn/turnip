@@ -1,6 +1,7 @@
 package turnip.functional;
 
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -16,7 +17,6 @@ import static turnip.util.Log.to;
 import static turnip.util.RestUtil.createEntityWithBearer;
 
 @SpringJUnitConfig(FunctionalTestConfig.class)
-@ExtendWith({FunctionalTestExtension.class})
 public abstract class FunctionalTest {
   protected Log log = to(getClass());
 
@@ -24,13 +24,37 @@ public abstract class FunctionalTest {
   @Autowired protected FuncTestProps props;
   @Autowired protected AuthnTokenSvc token;
 
-  public <T> T get(String authnToken, String url, Class<T> returnType){
+
+  @RegisterExtension
+  protected static TurnipJettyTestServer jettyTestServer =
+    new TurnipJettyTestServer();  
+  
+  public <T> T get(String authnToken, String url, Class<T> resultType){
     HttpEntity<T> entity = createEntityWithBearer(authnToken);
 
-    var epResponse = rest.exchange(format("http://%s%s", props.turnipApiServer, url),
-      HttpMethod.GET, entity, returnType);
+    var epResponse = rest.exchange(turnipApiServerUrl(url),
+      HttpMethod.GET, entity, resultType);
     
     return epResponse.getBody();
   }
 
+  public <TRequest, TResult> TResult post(
+    String authnToken, String url, 
+    TRequest request, Class<TResult> resultType
+  ){
+    HttpEntity<TRequest> entity = createEntityWithBearer(authnToken, request);
+
+    var epResponse = rest.exchange(turnipApiServerUrl(url),
+      HttpMethod.POST, entity, resultType);
+    
+    return epResponse.getBody();
+  }
+
+  public String turnipApiServerUrl(String url){
+    return format("http://%s%s", props.turnipApiServer, url);
+  }
+
+  protected String getTestPrefix(TestInfo testInfo) {
+    return testInfo.getTestClass().get().getSimpleName();
+  }
 }
