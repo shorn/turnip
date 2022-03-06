@@ -13,7 +13,7 @@ import static turnip.util.ExceptionUtil.createIllegalArgException;
 import static turnip.util.Log.to;
 
 /**
- Quick 'm dirty user database.  Will make it use a real DB at some point.
+ Quick 'n dirty user database.  Will make it use a real DB at some point.
  */
 @Component
 public class UserSvc {
