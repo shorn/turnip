@@ -42,7 +42,7 @@ public class UserSvc {
     }
     if( userInfo.roles.isEmpty() ){
       throw createIllegalArgException(
-        "use rmust have a role: %s", userInfo.email);
+        "user must have a role: %s", userInfo.email);
     }
     userDb.put(userInfo.email, userInfo.roles);
   }
