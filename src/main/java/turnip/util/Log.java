@@ -10,11 +10,12 @@ import java.util.function.Supplier;
 
 import static turnip.util.StringUtil.nullToString;
 
-/** Wraps slf4j Logger.
+/**
+ Wraps slf4j Logger.
  Originally, this came from a project where code might run in ans AWS Lambda
  (which forces old log4j version) or Spring.
- I've gotten used to it and now prefer it over directly using any of the 
- popular logging frameworks.  Additionally, this class can have structured 
+ I've gotten used to it and now prefer it over directly using any of the
+ popular logging frameworks.  Additionally, this class can have structured
  logging added it very easily.
  <p/>
  <ul>Benefits: <li>
@@ -35,32 +36,33 @@ import static turnip.util.StringUtil.nullToString;
  */
 public class Log {
 
-  public static Log to(Class<?> category){
+  public static Log to(Class<?> category) {
     return toClass(category);
   }
-  public static Log to(Class<?> category, String subcategory){
+
+  public static Log to(Class<?> category, String subcategory) {
     Guard.notNull("null catebory is not valid ", category);
     Guard.notNull("null subcategory is not valid", subcategory);
 
     return toString(category.getName() + "." + subcategory);
   }
 
-  public static Log to(String category){
+  public static Log to(String category) {
     return toString(category);
   }
 
-  public static Log toString(String category){
+  public static Log toString(String category) {
     return new Log(LoggerFactory.getLogger(category));
   }
 
-  public static Log toClass(Class<?> category){
+  public static Log toClass(Class<?> category) {
     return new Log(LoggerFactory.getLogger(category));
   }
 
   /**
    Creates a category for the class of the given instance.
    */
-  public static Log toInstance(Object category){
+  public static Log toInstance(Object category) {
     return new Log(LoggerFactory.getLogger(category.getClass()));
   }
 
@@ -72,18 +74,18 @@ public class Log {
    Look for logging from static contexts in cloudwatch,
    it won't show up in the AWS console when doing test executions.
    */
-  public static void staticLog(String msg, Object... args){
+  public static void staticLog(String msg, Object... args) {
     System.out.println(String.format(msg, args));
   }
 
 
   private Logger log;
 
-  private Log(Logger log){
+  private Log(Logger log) {
     this.log = log;
   }
 
-  public void debug(String msg){
+  public void debug(String msg) {
     log.debug(msg);
   }
 
@@ -92,18 +94,20 @@ public class Log {
    the log methods because I sometimes use them as a flag to tell me whether
    to do something.
    */
-  public boolean isDebugEnabled(){
+  public boolean isDebugEnabled() {
     return log.isDebugEnabled();
   }
 
-  public void debug(Supplier<String> msg){
+  public void debug(Supplier<String> msg) {
     if( log.isDebugEnabled() ){
       log.debug(msg.get());
     }
   }
 
-  /** Uses {@link String#format} - %s */
-  public void debug(String msg, Object... args){
+  /**
+   Uses {@link String#format} - %s
+   */
+  public void debug(String msg, Object... args) {
     if( !log.isDebugEnabled() ){
       return;
     }
@@ -118,16 +122,18 @@ public class Log {
     log.debug(String.format(msg, args));
   }
 
-  public boolean isInfoEnabled(){
+  public boolean isInfoEnabled() {
     return log.isInfoEnabled();
   }
 
-  public void info(String msg){
+  public void info(String msg) {
     log.info(msg);
   }
 
-  /** Uses {@link String#format} - %s */
-  public void info(String msg, Object... args){
+  /**
+   Uses {@link String#format} - %s
+   */
+  public void info(String msg, Object... args) {
     if( !log.isInfoEnabled() ){
       return;
     }
@@ -142,18 +148,20 @@ public class Log {
     log.info(String.format(msg, args));
   }
 
-  public void info(Supplier<String> msg){
+  public void info(Supplier<String> msg) {
     if( log.isInfoEnabled() ){
       log.info(msg.get());
     }
   }
 
-  public void warn(String msg){
+  public void warn(String msg) {
     log.warn(msg);
   }
 
-  /** Uses {@link String#format} - %s */
-  public void warn(String msg, Object... args){
+  /**
+   Uses {@link String#format} - %s
+   */
+  public void warn(String msg, Object... args) {
     if( args.length == 1 && args[0] instanceof Throwable ){
       if( !msg.contains("%s") ){
         log.warn(msg, (Throwable) args[0]);
@@ -164,17 +172,21 @@ public class Log {
     log.warn(String.format(msg, args));
   }
 
-  /** Uses {@link String#format} - %s */
+  /**
+   Uses {@link String#format} - %s
+   */
   public void warnEx(String msg, Throwable t, Object... args) {
     log.warn(String.format(msg, args), t);
   }
 
-  public void error(String msg){
+  public void error(String msg) {
     log.info(msg);
   }
 
-  /** Uses {@link String#format} - %s */
-  public void error(String msg, Object... args){
+  /**
+   Uses {@link String#format} - %s
+   */
+  public void error(String msg, Object... args) {
     if( args.length == 1 && args[0] instanceof Throwable ){
       if( !msg.contains("%s") ){
         log.error(msg, (Throwable) args[0]);
@@ -185,26 +197,30 @@ public class Log {
     log.error(String.format(msg, args));
   }
 
-  /** Uses {@link String#format} - %s */
-  public void errorEx(String msg, Throwable t, Object... args){
+  /**
+   Uses {@link String#format} - %s
+   */
+  public void errorEx(String msg, Throwable t, Object... args) {
     log.error(String.format(msg, args), t);
   }
 
-  /** Uses {@link String#format} - %s */
-  public RuntimeException runtimeException(String msg, Object... args){
+  /**
+   Uses {@link String#format} - %s
+   */
+  public RuntimeException runtimeException(String msg, Object... args) {
     RuntimeException re = new RuntimeException(String.format(msg, args));
     log.error(re.getMessage());
     return re;
   }
 
-  public LogMessageBuiler msg(String msg, Object... args){
+  public LogMessageBuiler msg(String msg, Object... args) {
     return new LogMessageBuiler(this, msg, args);
   }
-  
-  public LogMessageBuiler with(String name, Object value){
+
+  public LogMessageBuiler with(String name, Object value) {
     return new LogMessageBuiler(this, name, value);
   }
-  
+
   /* world's dodgiest structured logging API - seriously, no thought went into
    this at all */
   public static class LogMessageBuiler {
@@ -214,7 +230,8 @@ public class Log {
     private Object[] messageArgs;
     private Map<String, Object> structuredArgs;
 
-    /** when using log.msg() to start, i.e.:
+    /**
+     when using log.msg() to start, i.e.:
      `log.msg("message %s", val).with("field", field).info();`
      */
     public LogMessageBuiler(Log log, String msg, Object... messageArgs) {
@@ -225,7 +242,8 @@ public class Log {
       this.structuredArgs = new TreeMap<>();
     }
 
-    /** when using log.with() to start, i.e.:
+    /**
+     when using log.with() to start, i.e.:
      `log.with("field", field).info("message %s", val);`
      */
     public LogMessageBuiler(Log log, String name, Object value) {
@@ -233,12 +251,13 @@ public class Log {
       with(name, value);
     }
 
-    public LogMessageBuiler with(String name, Object value){
+    public LogMessageBuiler with(String name, Object value) {
       structuredArgs.put(name, value);
       return this;
     }
 
-    /** when using log.msg() to start, i.e.:
+    /**
+     when using log.msg() to start, i.e.:
      `log.msg("message %s", val).with("field", field).info();`
      */
     public void info() {
@@ -248,7 +267,8 @@ public class Log {
       log.log.info(this.toString());
     }
 
-    /** when using log.with() to start, i.e.:
+    /**
+     when using log.with() to start, i.e.:
      `log.with("field", field).info("message %s", val);`
      */
     public void info(String msg, Object... args) {
@@ -287,25 +307,29 @@ public class Log {
       log.log.debug(this.toString());
     }
 
-    public void debug(){
+    public void debug() {
       if( !log.isDebugEnabled() ){
         return;
       }
       log.log.debug(this.toString());
     }
 
-    public void warn(){
+    public void warn() {
       if( !log.log.isWarnEnabled() ){
         return;
       }
       log.log.warn(this.toString());
     }
 
+    /* This is useful at the moment as a flat string in the logs for viewing
+    in the console output directly.  In a larger context, you'd probably want
+    to output this as a json blob so it integrates with your log aggregation
+    infrastructure (Splunk, etc.) */
     @Override
     public String toString() {
       String message = String.format(msg, messageArgs);
       StringBuilder sb = new StringBuilder(message).append(" - ");
-      structuredArgs.forEach((key, value) -> 
+      structuredArgs.forEach((key, value)->
         sb.append(key).append("=").append(nullToString(value)).append(" "));
       return sb.toString();
     }
