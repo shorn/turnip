@@ -201,33 +201,90 @@ public class Log {
     return new LogMessageBuiler(this, msg, args);
   }
   
+  public LogMessageBuiler with(String name, Object value){
+    return new LogMessageBuiler(this, name, value);
+  }
+  
   /* world's dodgiest structured logging API - seriously, no thought went into
    this at all */
   public static class LogMessageBuiler {
 
-    private Log log;
+    private final Log log;
     private String msg;
     private Object[] messageArgs;
-    private Map<String, Object> otherArgs;
+    private Map<String, Object> structuredArgs;
 
+    /** when using log.msg() to start, i.e.:
+     `log.msg("message %s", val).with("field", field).info();`
+     */
     public LogMessageBuiler(Log log, String msg, Object... messageArgs) {
       this.log = log;
       this.msg = msg;
       this.messageArgs = messageArgs;
-      // for ordering
-      this.otherArgs = new TreeMap<>();
+      // TreeMap for ordering
+      this.structuredArgs = new TreeMap<>();
+    }
+
+    /** when using log.with() to start, i.e.:
+     `log.with("field", field).info("message %s", val);`
+     */
+    public LogMessageBuiler(Log log, String name, Object value) {
+      this(log, "");
+      with(name, value);
     }
 
     public LogMessageBuiler with(String name, Object value){
-      otherArgs.put(name, value);
+      structuredArgs.put(name, value);
       return this;
     }
 
+    /** when using log.msg() to start, i.e.:
+     `log.msg("message %s", val).with("field", field).info();`
+     */
     public void info() {
       if( !log.isInfoEnabled() ){
         return;
       }
       log.log.info(this.toString());
+    }
+
+    /** when using log.with() to start, i.e.:
+     `log.with("field", field).info("message %s", val);`
+     */
+    public void info(String msg, Object... args) {
+      this.msg = msg;
+      this.messageArgs = args;
+      if( !log.isInfoEnabled() ){
+        return;
+      }
+      log.log.info(this.toString());
+    }
+
+    public void error(String msg, Object... args) {
+      this.msg = msg;
+      this.messageArgs = args;
+      if( !log.isInfoEnabled() ){
+        return;
+      }
+      log.log.error(this.toString());
+    }
+
+    public void warn(String msg, Object... args) {
+      this.msg = msg;
+      this.messageArgs = args;
+      if( !log.isInfoEnabled() ){
+        return;
+      }
+      log.log.warn(this.toString());
+    }
+
+    public void debug(String msg, Object... args) {
+      this.msg = msg;
+      this.messageArgs = args;
+      if( !log.isInfoEnabled() ){
+        return;
+      }
+      log.log.debug(this.toString());
     }
 
     public void debug(){
@@ -248,7 +305,7 @@ public class Log {
     public String toString() {
       String message = String.format(msg, messageArgs);
       StringBuilder sb = new StringBuilder(message).append(" - ");
-      otherArgs.forEach((key, value) -> 
+      structuredArgs.forEach((key, value) -> 
         sb.append(key).append("=").append(nullToString(value)).append(" "));
       return sb.toString();
     }
