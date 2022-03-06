@@ -2,7 +2,9 @@ package turnip.service;
 
 import org.springframework.stereotype.Component;
 import turnip.spring.security.Role;
+import turnip.util.Guard;
 import turnip.util.Log;
+import turnip.util.ObjectUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.Optional;
 
 import static turnip.util.ExceptionUtil.createIllegalArgException;
 import static turnip.util.Log.to;
+import static turnip.util.ObjectUtil.hasValue;
 
 /**
  Quick 'n dirty user database.  Will make it use a real DB at some point.
@@ -37,10 +40,11 @@ public class UserSvc {
   }
   
   public void addUser(UserInfo userInfo){
+    Guard.hasValue("must have an email", userInfo.email);
     if( userDb.containsKey(userInfo.email) ){
       throw createIllegalArgException("duplicate email: %s", userInfo.email);
     }
-    if( userInfo.roles.isEmpty() ){
+    if( !hasValue(userInfo.roles) ){
       throw createIllegalArgException(
         "user must have a role: %s", userInfo.email);
     }

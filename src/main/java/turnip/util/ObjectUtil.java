@@ -116,4 +116,14 @@ public final class ObjectUtil {
     return result;
   }
 
+  public static boolean hasValue(Collection<?> c){
+    if( c == null ){
+      return false;
+    }
+    if( c.isEmpty() ){
+      return false;
+    }
+    
+    return true;
+  }
 }
