@@ -13,8 +13,8 @@ import javax.servlet.ServletContainerInitializer;
 
 public class EmbeddedJetty {
 
-  private Logger log = LoggerFactory.getLogger(getClass());
-  private Server server;
+  private final Logger log = LoggerFactory.getLogger(getClass());
+  private final Server server;
 
   public EmbeddedJetty() {
     QueuedThreadPool qtp = new QueuedThreadPool();
