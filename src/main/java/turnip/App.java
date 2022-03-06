@@ -10,7 +10,7 @@ import static turnip.util.Log.to;
 public class App {
   public static final int PORT = 8080;
   
-  private static Log log = to(App.class);
+  private static final Log log = to(App.class);
 
   public static void main(String... args) throws Exception {
     normaliseJvmDefaults();
