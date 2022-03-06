@@ -19,9 +19,9 @@ import java.util.Date;
 import static turnip.util.Log.to;
 
 public class SecureExceptionResolver extends AbstractHandlerExceptionResolver {
-  private static Log log = to(SecureExceptionResolver.class);
+  private static final Log log = to(SecureExceptionResolver.class);
 
-  private boolean redactErrorDetails;
+  private final boolean redactErrorDetails;
 
   public SecureExceptionResolver(
     boolean redactErrorDetails
@@ -78,8 +78,7 @@ public class SecureExceptionResolver extends AbstractHandlerExceptionResolver {
       return;
     }
     
-    if( ex instanceof NoHandlerFoundException ){
-      NoHandlerFoundException noHandlerEx = (NoHandlerFoundException) ex;
+    if(ex instanceof NoHandlerFoundException noHandlerEx){
       // info() level is intentional, don't clutter the logs with warnings
       log.msg("no mapping found").with("method", noHandlerEx.getHttpMethod()).
         with("url", noHandlerEx.getRequestURL()).info();
@@ -90,20 +89,17 @@ public class SecureExceptionResolver extends AbstractHandlerExceptionResolver {
   }
 
   private String mapMessage(Exception ex) {
-    if( ex instanceof ApiSafeException ){
-      ApiSafeException safe = (ApiSafeException) ex;
+    if(ex instanceof ApiSafeException safe){
       // The entire point of an ApiSafeException is that it's message should 
       // be safe to send to the client.
       return safe.getMessage();
     }
 
     if(
-      ex instanceof ServletException &&
+      ex instanceof ServletException nested &&
         ((ServletException) ex).getRootCause() instanceof ApiSafeException
     ){
-      ServletException nested = (ServletException) ex;
-      ApiSafeException safe = (ApiSafeException) nested.getRootCause();
-      return safe.getMessage();
+      return nested.getRootCause().getMessage();
     }
     
     // Logged as warn to avoid being accidentally filtered. 
@@ -128,7 +124,7 @@ public class SecureExceptionResolver extends AbstractHandlerExceptionResolver {
     return HttpStatus.INTERNAL_SERVER_ERROR;
   }
 
-  public class ErrorJson {
+  public static class ErrorJson {
     public Integer status;
     public String message;
     public String timeStamp;
