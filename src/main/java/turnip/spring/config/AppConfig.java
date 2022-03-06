@@ -52,6 +52,7 @@ public class AppConfig {
     ServletContext ctx
   ) {
     log.with("contextName", ctx.getServletContextName()).
+      with("contextPath", ctx.getContextPath()).
       info("initServletContext()");
     // Create the 'root' Spring application context
     AnnotationConfigWebApplicationContext rootContext =
