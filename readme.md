@@ -36,6 +36,13 @@ funcTestAuth0ClientSecret=XXX
 funcTestSharedPassword=XXX
 ```
 
-Also note, there are strict usage limits for Auth0, especially free accounts - 
+### Auth0 usage limits
+
+There are strict usage limits for Auth0, especially free accounts - 
 eventually will run into them if making too many tests.  Will have to slow down
 the tests or something eventually.
+
+If there's an error with too many requests or similar, the Auth0 API will
+return details of the issue (and reset time) in the response headers of the 
+request.  The test client logs these headers, but also remember to look in 
+the logs on the Auth0 console.
