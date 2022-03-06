@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
 import turnip.endpoint.MiscAdmin.AddUserRequest;
 import turnip.endpoint.MiscAdmin.ListUsersResult;
-import turnip.functional.FunctionalTest;
+import turnip.functional.FunctionalTestCase;
 import turnip.functional.spring.bean.UserManager;
 import turnip.service.UserSvc.UserInfo;
 
@@ -21,7 +21,7 @@ import static turnip.service.AuthzSvc.USER_ROLE;
 The actual application logic doesn't really make sense because it's not a real
 app.  The current endpoints just exist so I can demonstrate GET/POST requests. 
  */
-public class MiscAdminEndpointTest extends FunctionalTest {
+public class MiscAdminEndpointTest extends FunctionalTestCase {
 
   @Autowired private UserManager userManager;
   

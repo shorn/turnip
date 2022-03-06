@@ -17,7 +17,7 @@ import static turnip.util.Log.to;
 import static turnip.util.RestUtil.createEntityWithBearer;
 
 @SpringJUnitConfig(FunctionalTestConfig.class)
-public abstract class FunctionalTest {
+public abstract class FunctionalTestCase {
   protected Log log = to(getClass());
 
   @Autowired protected RestTemplate rest;

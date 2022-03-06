@@ -3,11 +3,11 @@ package turnip.functional.endpoint;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException;
-import turnip.functional.FunctionalTest;
+import turnip.functional.FunctionalTestCase;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class NonExistentEndpointTest extends FunctionalTest {
+public class NonExistentEndpointTest extends FunctionalTestCase {
 
   @Test
   public void nonExistentEndpointShould404() {

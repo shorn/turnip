@@ -54,7 +54,7 @@ implements BeforeAllCallback,
   }
 
   public void initTurnip() throws Exception {
-    to(FunctionalTest.class).info("initTurnip()");
+    to(FunctionalTestCase.class).info("initTurnip()");
     normaliseJvmDefaults();
 
     jetty = new EmbeddedJetty();

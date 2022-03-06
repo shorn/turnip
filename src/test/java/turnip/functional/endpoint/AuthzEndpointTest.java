@@ -11,7 +11,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
-import turnip.functional.FunctionalTest;
+import turnip.functional.FunctionalTestCase;
 import turnip.functional.spring.bean.UserManager;
 
 import java.util.Map;
@@ -29,7 +29,7 @@ It's too expensive to engineer a generic solution to generate correct
 inputs to every endpoint in order to avoid the exceptions.  So you'll see 
 the tests generate lots on NullPointerExceptions and other input-related errors.
 */
-public class AuthzEndpointTest extends FunctionalTest {
+public class AuthzEndpointTest extends FunctionalTestCase {
   public static final Map<String, String> EMPTY_POST_PARAM = Map.of(
     "requestData", "from AuthzEndpointTest");
 
