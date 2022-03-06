@@ -51,10 +51,11 @@ public abstract class FunctionalTest {
   }
 
   public String turnipApiServerUrl(String url){
+    //noinspection HttpUrlsUsage
     return format("http://%s%s", props.turnipApiServer, url);
   }
 
   protected String getTestPrefix(TestInfo testInfo) {
-    return testInfo.getTestClass().get().getSimpleName();
+    return testInfo.getTestClass().orElseThrow().getSimpleName();
   }
 }
