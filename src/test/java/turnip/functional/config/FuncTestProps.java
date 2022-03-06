@@ -50,7 +50,7 @@ public class FuncTestProps {
   public String nonUserEmail;
 
   /**
-   Makes my life easier to shared the same password for all test users.
+   Makes my life easier to share the same password for all test users.
    */
   @Value("${funcTestSharedPassword:}")
   public String sharedPassword;
