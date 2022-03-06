@@ -59,7 +59,8 @@ public class AuthnTokenSvc {
   }
 
   public String turnipApiServerUrl(String url){
-    return format("http://%s%s", props.turnipApiServer, url);
+    return format("%s://%s%s",
+      props.turnipApiProtocol, props.turnipApiServer, url );
   }
   
   /**

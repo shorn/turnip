@@ -60,4 +60,10 @@ public class FuncTestProps {
    */
   @Value("${funcTestTurnipApiServer:localhost:8080}")
   public String turnipApiServer;
+
+  /**
+   HTTP is opk for localhost
+   */
+  @Value("${funcTestTurnipApiProtocol:http}")
+  public String turnipApiProtocol;
 }
