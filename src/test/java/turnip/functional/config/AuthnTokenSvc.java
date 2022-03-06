@@ -5,9 +5,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import turnip.util.Guard;
 import turnip.util.Log;
@@ -30,11 +33,16 @@ public class AuthnTokenSvc {
   @Autowired private RestTemplate rest;
 
   /** Doing this eagerly, the execution time is not counted against 
-   whatever test happens to run first */
+   whatever test happens to run first.
+   BUT - that means if it fails it's hard to tell what's happening!
+   Caused me isssues when picking up the project again.
+   */
   @PostConstruct
   public void setup(){
-    Guard.hasValue(props.auth0ClientId, "auth0ClientId must be configured");
-    Guard.hasValue(props.sharedPassword, "sharedPassword must be configured");
+    Guard.hasValue("auth0ClientId must be configured", props.auth0ClientId);
+    Guard.hasValue("auth0ClientSecret must be configured", 
+      props.auth0ClientSecret);
+    Guard.hasValue("sharedPassword must be configured", props.sharedPassword);
     log.info("load user authn token");
     user = authenticateUser(props.userEmail);
 
@@ -78,9 +86,17 @@ public class AuthnTokenSvc {
 
     var request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
-    var response = rest.postForEntity(
-      format("https://%s/oauth/token", props.auth0TenantDomain),
-      request, Auth0AuthToken.class);
+    ResponseEntity<Auth0AuthToken> response = null;
+    try {
+      response = rest.postForEntity(
+        format("https://%s/oauth/token", props.auth0TenantDomain),
+        request, Auth0AuthToken.class);
+    }
+    catch( HttpClientErrorException.TooManyRequests ex ){
+      log.with("headers", ex.getResponseHeaders()).
+        error("post to auth0 /oauth/token returned TooManyRequests");
+      throw ex;
+    }
 
     return response.getBody().access_token;
   }
