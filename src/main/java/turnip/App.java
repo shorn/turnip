@@ -15,16 +15,16 @@ public class App {
   public static void main(String... args) throws Exception {
     normaliseJvmDefaults();
     
-    EmbeddedJetty jetty = new EmbeddedJetty();
+    var jetty = new EmbeddedJetty();
     jetty.configureHttpConnector(PORT);
     jetty.addServletContainerInitializer( (sci, ctx) -> 
         AppConfig.initServletContext(ctx) );
 
     // Will be called when pressing ctrl-c, for example.
-    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-      jetty.shutdown();
-    }, "app-shutdown"));
+    Runtime.getRuntime().addShutdownHook(
+      new Thread(jetty::shutdown, "app-shutdown") );
     
+    log.info("starting the server");
     jetty.startJoin();
   }
 
