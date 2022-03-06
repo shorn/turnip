@@ -40,7 +40,7 @@ config files. IMPROVE: use XDG_CONFIG_HOME env variable */
   value = "file:///${user.home}/.config/turnip/env.properties",
   ignoreResourceNotFound = true)
 public class AppConfig {
-  private static Log log = to(AppConfig.class);
+  private static final Log log = to(AppConfig.class);
 
   public static AnnotationConfigWebApplicationContext initServletContext(
     ServletContext ctx
