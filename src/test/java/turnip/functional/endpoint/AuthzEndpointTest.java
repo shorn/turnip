@@ -24,11 +24,15 @@ import static org.springframework.http.HttpMethod.POST;
 import static turnip.util.RestUtil.createEntityWithBearer;
 
 /**
-This test will cause excpetions to show p in the log - they can be ignored.
-It's too expensive to engineer a generic solution to generate correct 
-inputs to every endpoint in order to avoid the exceptions.  So you'll see 
-the tests generate lots on NullPointerExceptions and other input-related errors.
-*/
+ This test will cause excpetions to show up in the log - they can be ignored.
+ They're caused by the test trying to make complicated requests (like 
+ POST requests that need a bunch of properly setup data) without any specific
+ knowledge of the test.
+ It's too expensive to engineer a generic solution to generate correct
+ inputs to every endpoint in order to avoid the exceptions.  So you'll see
+ the tests generate lots on NullPointerExceptions and other input-related 
+ errors.
+ */
 public class AuthzEndpointTest extends FunctionalTestCase {
   public static final Map<String, String> EMPTY_POST_PARAM = Map.of(
     "requestData", "from AuthzEndpointTest");
@@ -37,6 +41,7 @@ public class AuthzEndpointTest extends FunctionalTestCase {
   
   @TestFactory
   public Stream<DynamicTest> allEndpointsShouldBeAuthorized() {
+    log.info("NOTE: stack traces are expected, see class comment");
     return jettyTestServer.getTurnipApiHandlerMethods().entrySet().stream().
       flatMap((i) -> createEndpointTests(i.getKey(), i.getValue()));
   }
