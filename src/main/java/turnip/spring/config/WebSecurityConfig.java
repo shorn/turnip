@@ -20,16 +20,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   public static final String PUBLIC = "/public";
   public static final String AUDIENCE_PROP_NAME = "auth0.audience";
 
-  private static Log log = to(WebSecurityConfig.class);
+  private static final Log log = to(WebSecurityConfig.class);
 
   /** The "audience of the JWT" - i.e. the target system (i.e. this 
    server) the JWT is passed to in order verify that the bearer of the JWT is 
    authentic. */
-  private String audience;
+  private final String audience;
   /** The "issuer of the JWT" - i.e. the system that issued the JWT to the JWT
    to the bearer. */
-  private String issuer;
-  private long leeway;
+  private final String issuer;
+  private final long leeway;
 
   public WebSecurityConfig(
     @Value("${" + AUDIENCE_PROP_NAME + ":https://localhost:8080}") String audience, 
