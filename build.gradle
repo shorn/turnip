@@ -42,8 +42,10 @@ dependencies{
   implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
   
   // embedded Jetty server - pkg: org.eclipse.jetty.server
+  //noinspection GradlePackageUpdate - can'ut use 11, see readme
   implementation 'org.eclipse.jetty:jetty-server:10.0.6'
   // Jetty support for Servlet API - pkg: org.eclipse.jetty.servlet
+  //noinspection GradlePackageUpdate
   implementation 'org.eclipse.jetty:jetty-servlet:10.0.6'
 
   // support for JSON serialization for Spring endpoints
@@ -130,13 +132,16 @@ task functionalTest(type:Test){
 
 task uberJar(type: Jar) {
   group "distribution"
-  archiveClassifier = 'uber'
+  // using `=`, IDEA error warn about archiveClassifier exceeds access rights  
+  archiveClassifier.set('uber')
 
   // different name from standard jar and don't want version in the name
   archiveFileName = "turnip-app.jar"
-  
+
+  //noinspection GroovyAssignabilityCheck
   manifest{
     mainClassName = "turnip.App"
+    //noinspection GroovyAssignabilityCheck
     duplicatesStrategy "EXCLUDE"
     attributes (
       'Main-Class': 'turnip.App',
