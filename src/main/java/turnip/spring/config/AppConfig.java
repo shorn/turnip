@@ -25,16 +25,22 @@ import static turnip.util.Log.to;
 @EnableWebSecurity
 @ComponentScan(basePackages = {
   "turnip.spring.config", "turnip.service", "turnip.endpoint" })
-/* Simplest production deployment is to just dump the uberJar and 
-config in a directory and run the Java command from that directory.
+/* This is NOT for you to put an `env.properties` file with credentials in the 
+source tree!
+This is a convenience to allow simple production deployments to just dump the 
+uberJar and config in a directory and run the Java command from that directly.
 It's possible to maintain multiple different configurations on the same 
 machine by putting config in separate directories and executing from those 
 directories. I'd use Docker to encapsulate in a real setup, but this can be
-useful on dev machines to maintain multiple configurations. */
+useful on dev machines to maintain multiple configurations. 
+*/
 @PropertySource(name = "working_dir_environment",
   value = "./env.properties",
   ignoreResourceNotFound = true)
-/* During standard development cycle, use hardcoded default XDG location for 
+/* This is where you should put credentials for standard development workflow,
+far away from the source tree, in a standard location that usually has better
+OS-level protections (permissions, etc.)
+During standard development cycle, use hardcoded default XDG location for 
 config files. IMPROVE: use XDG_CONFIG_HOME env variable */
 @PropertySource(name = "user_config_environment",
   value = "file:///${user.home}/.config/turnip/env.properties",
