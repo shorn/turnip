@@ -40,7 +40,7 @@ useful on dev machines to maintain multiple configurations.
 /* This is where you should put credentials for standard development workflow,
 far away from the source tree, in a standard location that usually has better
 OS-level protections (permissions, etc.)
-During standard development cycle, use hardcoded default XDG location for 
+During standard development cycle, uses hardcoded default XDG location for 
 config files. IMPROVE: use XDG_CONFIG_HOME env variable */
 @PropertySource(name = "user_config_environment",
   value = "file:///${user.home}/.config/turnip/env.properties",
