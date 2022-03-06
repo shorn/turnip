@@ -24,6 +24,8 @@ import static turnip.util.RestUtil.createEntityWithBearer;
 public class AuthnTokenSvc {
   protected Log log = to(AuthnTokenSvc.class);
   
+  // authn tokens for the users that must be manually created 
+  // in Auth0 before running the tests.
   private String user;
   private String admin;
   private String nonUser;
@@ -38,8 +40,12 @@ public class AuthnTokenSvc {
    */
   @PostConstruct
   public void setup(){
+    authenticatePreExistingUsers();
+  }
+  
+  public void authenticatePreExistingUsers(){
     Guard.hasValue("auth0ClientId must be configured", props.auth0ClientId);
-    Guard.hasValue("auth0ClientSecret must be configured", 
+    Guard.hasValue("auth0ClientSecret must be configured",
       props.auth0ClientSecret);
     Guard.hasValue("sharedPassword must be configured", props.sharedPassword);
     log.with("userEmail", props.userEmail).info("load user authn token");
@@ -55,7 +61,6 @@ public class AuthnTokenSvc {
     HttpEntity<String> entity = createEntityWithBearer(admin);
     rest.exchange(turnipApiServerUrl("/api/warmup"),
       HttpMethod.GET, entity, String.class);
-
   }
 
   public String turnipApiServerUrl(String url){
