@@ -13,3 +13,29 @@ Jetty 11 is identical to Jetty 10 except that the javax.* packages now conform
 to the new jakarta.* namespace. Jetty 10 and 11 will remain in lockstep with
 each other for releases, meaning all new features or bug fixes in one version
 will be available in the other.
+
+
+### Setup for functional tests
+
+The functional tests actually integrate against Auth0, so you must have an
+Auth0 account created, with an `API` And `Application` configured.
+
+Most Auth0 settings defaulted for the account stored in Keepass under 
+/Rabbit/Auth0/Turnip Auth0, but you must set the `funcTestAuth0ClientSecret`
+property (get it from Keepass or from the Application config in the Auth0 
+console.
+
+The usernames are defaulted (`funcTestUserEmail` etc.), but the password must 
+be set in the `funcTestSharedPassword` property.  
+You must create the users in Auth0 by hand, setting the same password for all
+of them.
+
+Example `~/.config/turnip/functest.properties`:
+```
+funcTestAuth0ClientSecret=XXX
+funcTestSharedPassword=XXX
+```
+
+Also note, there are strict usage limits for Auth0, especially free accounts - 
+eventually will run into them if making too many tests.  Will have to slow down
+the tests or something eventually.
