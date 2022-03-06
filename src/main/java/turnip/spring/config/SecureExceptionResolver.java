@@ -21,6 +21,9 @@ import static turnip.util.Log.to;
 public class SecureExceptionResolver extends AbstractHandlerExceptionResolver {
   private static final Log log = to(SecureExceptionResolver.class);
 
+  /** should be set to true in production, so that the resolver will make
+   sure we don't leak any exception details to callers of the API (to avoid
+   accidentall leakage of information). */
   private final boolean redactErrorDetails;
 
   public SecureExceptionResolver(
