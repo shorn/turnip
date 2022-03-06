@@ -23,11 +23,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private static final Log log = to(WebSecurityConfig.class);
 
   /** The "audience of the JWT" - i.e. the target system (i.e. this 
-   server) the JWT is passed to in order verify that the bearer of the JWT is 
-   authentic. */
+   server). */
   private final String audience;
-  /** The "issuer of the JWT" - i.e. the system that issued the JWT to the JWT
-   to the bearer. */
+  /** The "issuer of the JWT" - i.e. the system that issued the JWT to the 
+   bearer. */
   private final String issuer;
   private final long leeway;
 
@@ -36,8 +35,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${auth0.issuer:https://rabbit-turnip.us.auth0.com/}") String issuer,
     @Value("${auth0.leeway:2000}") long leeway
   ) {
-    log.msg("init").with("audience", audience).with("issuer", issuer).
-      with("leeway", leeway).info();
+    log.with("audience", audience).with("issuer", issuer).
+      with("leeway", leeway).info("init");
     Guard.hasValue(AUDIENCE_PROP_NAME + " must be set", audience);
     Guard.hasValue("auth0.issuer must be set", issuer);
     this.audience = audience;
