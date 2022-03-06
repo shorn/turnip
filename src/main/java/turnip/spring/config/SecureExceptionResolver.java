@@ -29,6 +29,7 @@ public class SecureExceptionResolver extends AbstractHandlerExceptionResolver {
     this.redactErrorDetails = redactErrorDetails;
   }
 
+  @SuppressWarnings("NullableProblems")
   @Override
   protected ModelAndView doResolveException(
     HttpServletRequest request,
