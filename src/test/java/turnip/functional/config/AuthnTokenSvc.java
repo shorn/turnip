@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import turnip.util.Guard;
 import turnip.util.Log;
@@ -43,13 +42,13 @@ public class AuthnTokenSvc {
     Guard.hasValue("auth0ClientSecret must be configured", 
       props.auth0ClientSecret);
     Guard.hasValue("sharedPassword must be configured", props.sharedPassword);
-    log.info("load user authn token");
+    log.with("userEmail", props.userEmail).info("load user authn token");
     user = authenticateUser(props.userEmail);
 
-    log.info("load admin authn token");
+    log.with("userEmail", props.adminEmail).info("load admin authn token");
     admin = authenticateUser(props.adminEmail);
 
-    log.info("load nonUser authn token");
+    log.with("userEmail", props.nonUserEmail).info("load nonUser authn token");
     nonUser = authenticateUser(props.nonUserEmail);
 
     log.info("warm up the API server");
