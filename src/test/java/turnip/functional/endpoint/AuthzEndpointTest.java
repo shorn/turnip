@@ -106,7 +106,7 @@ public class AuthzEndpointTest extends FunctionalTestCase {
 
     try {
       rest.exchange(turnipApiServerUrl(path), POST, entity, String.class);
-      fail("should not have been able to call GET endpoint: " + path);
+      fail("should not have been able to call POST endpoint: " + path);
     }
     catch( HttpClientErrorException e ){
       assertEquals(HttpStatus.UNAUTHORIZED, e.getStatusCode());
@@ -114,7 +114,7 @@ public class AuthzEndpointTest extends FunctionalTestCase {
     catch( HttpServerErrorException e ){
       // if the server gets to the point of having an 500 error, then it must
       // not have validated the user
-      fail("should not have been able to call GET endpoint: " + path);
+      fail("should not have been able to call POST endpoint: " + path);
     }
 
     // any POST endpoint should be callable by the admin user
@@ -125,6 +125,7 @@ public class AuthzEndpointTest extends FunctionalTestCase {
       // check and actually executed successfully
     }
     catch( HttpServerErrorException e ){
+      log.info("NOTE: stack traces are expected, see class comment");
       // this is Ok, if it got to the point of throwing a 500, then it got
       // past any security check
     }
