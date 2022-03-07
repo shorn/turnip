@@ -41,7 +41,8 @@ public class AuthzEndpointTest extends FunctionalTestCase {
   
   @TestFactory
   public Stream<DynamicTest> allEndpointsShouldBeAuthorized() {
-    log.info("NOTE: stack traces are expected, see class comment");
+    // see class comment
+    log.warn("***NOTE***: warnings and errors are expected below");
     return jettyTestServer.getTurnipApiHandlerMethods().entrySet().stream().
       flatMap((i) -> createEndpointTests(i.getKey(), i.getValue()));
   }
@@ -125,7 +126,8 @@ public class AuthzEndpointTest extends FunctionalTestCase {
       // check and actually executed successfully
     }
     catch( HttpServerErrorException e ){
-      log.info("NOTE: stack traces are expected, see class comment");
+      // see class comment
+      log.warn("***NOTE***: warnings and errors are expected above");
       // this is Ok, if it got to the point of throwing a 500, then it got
       // past any security check
     }

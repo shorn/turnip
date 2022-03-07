@@ -47,27 +47,22 @@ function (user, context, callback) {
 
 I store my credentials in my Keepass (/Rabbit/Auth0/Turnip Auth0).
 
-Most Auth0 settings, except credentials, are defaulted (in the Spring property
-config in code) for my personal turnip Auth0 account setup as described above.  
-
-The `funcTestAuth0ClientSecret` (from Auth0 console or keepass) must be set.
-
-The usernames are defaulted (`funcTestUserEmail` etc.), but the password must 
-be set in the `funcTestSharedPassword` property (see Keepass).  
+You must set the various properties to talk to Auth0 before the functional
+tests will run.   
 
 You must create the users in Auth0 by hand, setting the same password for all
 of them.
 
-Example `~/.config/turnip/functest.properties`:
+Example confif file: `~/.config/turnip/functest.properties`:
 ```
-funcTestAuth0TenantDomain=XXX
-funcTestAuth0Audience=XXX
-funcTestAuth0ClientId=XXX
-funcTestAuth0ClientSecret=XXX
-funcTestSharedPassword=XXX
+funcTestAuth0TenantDomain=rabbit-turnip.us.auth0.com
+funcTestAuth0Audience=turnip-functional-test-api
+funcTestAuth0ClientId=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+funcTestAuth0ClientSecret=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-XXXXXXXXXXXXXX_XX_XX
+funcTestSharedPassword=SuperSecretPasswordOfUnbreakableness
 ```
 
-Functional tests exists as a separate source-set from unit tests.
+Functional tests exists as a separate Gradle source-set from unit tests.
 The functonal tests can be run with the `funcTest` class (after Auth0 config).
 
 ## Auth0 usage limits

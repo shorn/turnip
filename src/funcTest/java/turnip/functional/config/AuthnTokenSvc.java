@@ -46,10 +46,17 @@ public class AuthnTokenSvc {
   }
   
   public void authenticatePreExistingUsers(){
-    Guard.hasValue("auth0ClientId must be configured", props.auth0ClientId);
-    Guard.hasValue("auth0ClientSecret must be configured",
+    log.with("domain", props.auth0TenantDomain).
+      with("audience", props.auth0Audience).
+      with("client_id", props.auth0ClientId).
+      info("authenticating functional test users");
+    Guard.hasValue("auth0TenantDomain must be set", props.auth0TenantDomain);
+    Guard.hasValue("auth0Audience must be set", props.auth0Audience);
+    Guard.hasValue("auth0ClientId must be set", props.auth0ClientId);
+    Guard.hasValue("auth0ClientSecret must be set",
       props.auth0ClientSecret);
-    Guard.hasValue("sharedPassword must be configured", props.sharedPassword);
+    Guard.hasValue("sharedPassword must be set", props.sharedPassword);
+
     log.with("userEmail", props.userEmail).info("load user authn token");
     user = authenticateUser(props.userEmail);
 

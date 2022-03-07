@@ -9,7 +9,7 @@ public class FuncTestProps {
    Tenant settings must have "default directory" set to whatever connection
    you've created the test users in (e.g. `functional-test-realm`)
    */
-  @Value("${funcTestAuth0TenantDomain:rabbit-turnip.us.auth0.com}")
+  @Value("${funcTestAuth0TenantDomain:}")
   public String auth0TenantDomain;
 
   /**
@@ -17,7 +17,7 @@ public class FuncTestProps {
    Note that the API must be authorised for the "application" (identified
    below as the Auth0ClientId
    */
-  @Value("${funcTestAuth0Audience:turnip-functional-test-api}")
+  @Value("${funcTestAuth0Audience:}")
   public String auth0Audience;
 
   /**
@@ -25,7 +25,7 @@ public class FuncTestProps {
    - the application must be authorised for the API used as the Auth0Audience
    - the application must have password grant enabled (under advanced settings)
    */
-  @Value("${funcTestAuth0ClientId:3d2GbzRbIaSbrDDdpcHIpHOjkfUP1gJ3}")
+  @Value("${funcTestAuth0ClientId:}")
   public String auth0ClientId;
 
   /**
