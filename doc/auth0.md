@@ -1,17 +1,16 @@
-## Setup for Auth0
 
-## Must have a "Tenant"
+# Must have a "Tenant"
 * I created a tentant named "rabbit-turnip", which maps to
   `rabbit-turnip.us.auth0.com`
 * this is the domain used when talking to the Auth0 APIs
 * Functional tests: configured via property `funcTestAuth0TenantDomain`
 
-## Must have an "API"
+# Must have an "API"
 * I created an API with name and ID of "turnip-functional-test-api"
 * the "Identifier" value is what goes in the `audience` field of the token
 * Functional tests: `audience` is read form property `funcTestAuth0Audience`
 
-## Must have an "Application"
+# Must have an "Application"
 * I created an Application named "turnip-functional-test-app", enabled for
   "turnip-functional-test-api".
 * The Auth0 console shows values for "Client ID" and "Client Secret",
@@ -19,7 +18,7 @@
 * Functional tests: `client_id` is read from `funcTestAuth0ClientId`,
   `client_secret` is read from `funcTestAuth0ClientSecret`.
 
-## Must define an "Auth Pipeline rule" to populate the custom token fields
+# Must define an "Auth Pipeline rule" to populate the custom token fields
 Create a rule with the following defintion (name doesn't matter):
 ```
 function (user, context, callback) {
@@ -44,7 +43,7 @@ validation, etc.  But that's a fairly small bit of technical implementation,
 compared to tying the app into how Auth0 authorization works.
 
 
-## Setup for functional tests
+# Setup for functional tests
 
 I store my credentials in my Keepass (/Rabbit/Auth0/Turnip Auth0).
 
@@ -63,7 +62,7 @@ funcTestAuth0ClientSecret=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-XXXXXXXXXX
 funcTestSharedPassword=SuperSecretPasswordOfUnbreakableness
 ```
 
-## Auth0 usage limits
+# Auth0 usage limits
 
 There are strict usage limits for Auth0, especially free accounts -
 eventually will run into them if running too many tests and will start getting
