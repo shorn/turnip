@@ -15,8 +15,7 @@ import static turnip.util.StringUtil.nullToString;
  Originally, this came from a project where code might run in ans AWS Lambda
  (which forces old log4j version) or Spring.
  I've gotten used to it and now prefer it over directly using any of the
- popular logging frameworks.  Additionally, this class can have structured
- logging added it very easily.
+ popular logging frameworks.
  <p/>
  <ul>Benefits: <li>
  Shorter declarations, with static imports as well:
@@ -26,12 +25,19 @@ import static turnip.util.StringUtil.nullToString;
  Java8 support: use lambdas "()->x.toString()" instead of
  "if( log.isDebugEnabled(){log.debug(x.toString)}"
  </li> <li>
- Consistent string formatting: Log uses "%s" instead of "{}", eliminates
+ Consistent string formatting: Log API uses "%s" instead of "{}", eliminates
  formatting errors caused by misrememberance or copy pasting between different
- string formatting contexts.
+ string formatting contexts.  
+ </li> <li>
+ Structured logging, %s format specifiers can still be messed up, so now
+ the Log API has `with()` methods to enable structured logging.
  </li> <li>
  Eases upgrade burden when upgrading libraries, and makes it easy to move
  code between different codebases that always seem to use different logging.
+ </li> <li>
+ AVOID: don't add anonymous `with(Object)` or with `with(Object...)` methods 
+ that just lets you add unnamed objects to be printed out.  Force the user 
+ to provide a name, better for the app in the long run.
  </li> </ul>
  */
 public class Log {
@@ -213,32 +219,35 @@ public class Log {
     return re;
   }
 
-  public LogMessageBuiler msg(String msg, Object... args) {
-    return new LogMessageBuiler(this, msg, args);
+  public LogMessageBuilder msg(String msg, Object... args) {
+    return new LogMessageBuilder(this, msg, args);
   }
 
-  public LogMessageBuiler with(String name, Object value) {
-    return new LogMessageBuiler(this, name, value);
+  public LogMessageBuilder with(String name, Object value) {
+    return new LogMessageBuilder(this, name, value);
   }
 
   /* world's dodgiest structured logging API - seriously, no thought went into
    this at all */
-  public static class LogMessageBuiler {
+  public static class LogMessageBuilder {
 
     private final Log log;
+    private final Map<String, Object> structuredArgs;
+
+    /* IMPROVE: standardise the `log.with().info("")` API, remove the old API
+     and get rid of these fields. */
     private String msg;
     private Object[] messageArgs;
-    private Map<String, Object> structuredArgs;
 
     /**
      when using log.msg() to start, i.e.:
      `log.msg("message %s", val).with("field", field).info();`
      */
-    public LogMessageBuiler(Log log, String msg, Object... messageArgs) {
+    public LogMessageBuilder(Log log, String msg, Object... messageArgs) {
       this.log = log;
       this.msg = msg;
       this.messageArgs = messageArgs;
-      // TreeMap for ordering
+      // TreeMap to retain the order the args were added in
       this.structuredArgs = new TreeMap<>();
     }
 
@@ -246,12 +255,12 @@ public class Log {
      when using log.with() to start, i.e.:
      `log.with("field", field).info("message %s", val);`
      */
-    public LogMessageBuiler(Log log, String name, Object value) {
+    public LogMessageBuilder(Log log, String name, Object value) {
       this(log, "");
       with(name, value);
     }
 
-    public LogMessageBuiler with(String name, Object value) {
+    public LogMessageBuilder with(String name, Object value) {
       structuredArgs.put(name, value);
       return this;
     }
@@ -324,7 +333,9 @@ public class Log {
     /* This is useful at the moment as a flat string in the logs for viewing
     in the console output directly.  In a larger context, you'd probably want
     to output this as a json blob so it integrates with your log aggregation
-    infrastructure (Splunk, etc.) */
+    infrastructure (Splunk, etc.)
+    IMPROVE: specific collection handling for the flat format (JSON 
+    formatting will just work with collections easily). */
     @Override
     public String toString() {
       String message = String.format(msg, messageArgs);
