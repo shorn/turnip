@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 import static org.springframework.http.HttpMethod.POST;
+import static turnip.unit.util.BDD.EXPECT;
 import static turnip.util.RestUtil.createEntityWithBearer;
 
 /**
@@ -32,6 +33,10 @@ import static turnip.util.RestUtil.createEntityWithBearer;
  inputs to every endpoint in order to avoid the exceptions.  So you'll see
  the tests generate lots on NullPointerExceptions and other input-related 
  errors.
+ <p>
+ The test iterates across all endpoints that the spring 
+ RequestMappingHandlerMapping knows about and dynamically generates a (very 
+ dumb) test that will try to exercise that endpoint.
  */
 public class AuthzEndpointTest extends FunctionalTestCase {
   public static final Map<String, String> EMPTY_POST_PARAM = Map.of(
@@ -76,7 +81,8 @@ public class AuthzEndpointTest extends FunctionalTestCase {
       createEntityWithBearer(token.getNonUser());
     log.msg("testing endpoint").with("method", "GET").with("path", path).info();
     try {
-      rest.exchange(turnipApiServerUrl(path), HttpMethod.GET, entity, String.class);
+      rest.exchange(turnipApiServerUrl(path), 
+        HttpMethod.GET, entity, String.class);
       fail("should not have been able to call GET endpoint: " + path);
     }
     catch( HttpClientErrorException e ){
@@ -91,7 +97,8 @@ public class AuthzEndpointTest extends FunctionalTestCase {
     // any GET endpoint should be callable by the admin user
     entity = createEntityWithBearer(token.getAdmin());
     try {
-      rest.exchange(turnipApiServerUrl(path), HttpMethod.GET, entity, String.class);
+      rest.exchange(turnipApiServerUrl(path), 
+        HttpMethod.GET, entity, String.class );
       // if the test gets to here, then the server got past the security 
       // check and actually executed successfully
     }
@@ -104,7 +111,8 @@ public class AuthzEndpointTest extends FunctionalTestCase {
   private void testPostEndpoint(String path, HandlerMethod handler) {
     HttpEntity<Object> entity =
       createEntityWithBearer(token.getNonUser(), EMPTY_POST_PARAM);
-
+    
+    EXPECT(path + " - non-user should be rejected as UNAUTHORIZED");
     try {
       rest.exchange(turnipApiServerUrl(path), POST, entity, String.class);
       fail("should not have been able to call POST endpoint: " + path);
@@ -118,6 +126,7 @@ public class AuthzEndpointTest extends FunctionalTestCase {
       fail("should not have been able to call POST endpoint: " + path);
     }
 
+    EXPECT(path + " - admin-user should be not be rejected as UNAUTHORIZED");
     // any POST endpoint should be callable by the admin user
     entity = createEntityWithBearer(token.getAdmin(), EMPTY_POST_PARAM);
     try {
