@@ -15,7 +15,7 @@ The prod code and the functional tests integrate against Auth0.
 ## Must have a "Tenant"
 * I created a tentant named "rabbit-turnip", which maps to 
 `rabbit-turnip.us.auth0.com`
-* this is the domain used when talking to the AUth0 APIs
+* this is the domain used when talking to the Auth0 APIs
 * Functional tests: configured via property `funcTestAuth0TenantDomain`
 
 ## Must have an "API"
@@ -24,12 +24,12 @@ The prod code and the functional tests integrate against Auth0.
 * Functional tests: `audience` is read form property `funcTestAuth0Audience`  
 
 ## Must have an "Application" 
-* Must have an "Application" created, which must be enabled for your "API"
-* I created an Application named "turnip-functional-test-app", which has
-* "Client ID" and "Client Secret" values, which map to `client_id` and
-`client_secret` token fields
+* I created an Application named "turnip-functional-test-app", enabled for
+"turnip-functional-test-api".
+* The Auth0 console shows values for "Client ID" and "Client Secret", 
+which map to `client_id` and `client_secret` token fields.
 * Functional tests: `client_id` is read from `funcTestAuth0ClientId`, 
-`client_secret` is read from `funcTestAuth0ClientSecret`
+`client_secret` is read from `funcTestAuth0ClientSecret`.
 
 ## Must define an "Auth Pipeline rule" to populate the custom token fields
 Create a rule with the following defintion (name doesn't matter):
