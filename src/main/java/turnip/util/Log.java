@@ -83,10 +83,13 @@ public class Log {
 
   /**
    This method should only be called from static initialiser blocks.
-   It's intended for doing very little "bootstrap" logging during lambda
-   creation.
+   Originally implemented for doing simple quick/n/dirty "bootstrap" logging 
+   during lambda creation.
    <p>
-   Look for logging from static contexts in cloudwatch,
+   Can be useful in other bootstrap contexts too (like logging from a main()
+   or test setup method before logging is even configured).
+   <p>
+   AWS console tip: Look for logging from static contexts in cloudwatch,
    it won't show up in the AWS console when doing test executions.
    */
   public static void staticLog(String msg, Object... args) {
@@ -105,9 +108,9 @@ public class Log {
   }
 
   /**
-   isEnabled() methods are still required, even though already builtin to
-   the log methods because I sometimes use them as a flag to tell me whether
-   to do something.
+   isEnabled() methods are still desired, even though already builtin to
+   the log methods because I sometimes abuse them as a flag to tell me whether
+   to do something (blech - use a proper flag instead!)
    */
   public boolean isDebugEnabled() {
     return log.isDebugEnabled();
