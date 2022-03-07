@@ -75,7 +75,8 @@ funcTestAuth0ClientSecret=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX-XXXXXXXXXX
 funcTestSharedPassword=SuperSecretPasswordOfUnbreakableness
 ```
 
-Functional tests exists as a separate Gradle source-set from unit tests.
+The functional test suite exists as a separate Gradle source-set from unit 
+tests.
 The functonal tests can be run with the `funcTest` class (after Auth0 config).
 
 ## Auth0 usage limits
