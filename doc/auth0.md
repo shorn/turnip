@@ -39,7 +39,7 @@ separate and firewalled off from anything else you might doing.
 ## Must have an "API"
 * I created an API with name and ID of "turnip-functional-test-api"
 * the "Identifier" value is what goes in the `audience` field of the token
-* Functional tests: `audience` is read form property `funcTestAuth0Audience`
+* Functional tests: `audience` is read from `funcTestAuth0Audience`
 
 ## Must have an "Application"
 * I created an Application named "turnip-functional-test-app", enabled for
@@ -50,7 +50,8 @@ separate and firewalled off from anything else you might doing.
   `client_secret` is read from `funcTestAuth0ClientSecret`.
 
 ## Must define an "Auth Pipeline rule" to populate the custom token fields
-Create a rule with the following defintion (name doesn't matter):
+In the Auth0 console, you must create a rule with the following defintion 
+(name doesn't matter):
 ```
 function (user, context, callback) {
   const namespace = 'http://turnip_';
