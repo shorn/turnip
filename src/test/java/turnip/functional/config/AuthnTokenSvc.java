@@ -34,7 +34,8 @@ public class AuthnTokenSvc {
   @Autowired private RestTemplate rest;
 
   /** Doing this eagerly, the execution time is not counted against 
-   whatever test happens to run first.
+   whatever test happens to run first.  Also, given Auth0 has aggressive
+   usage limits - we don't want to do this many times.
    BUT - that means if it fails it's hard to tell what's happening!
    Caused me isssues when picking up the project again.
    */
@@ -69,7 +70,7 @@ public class AuthnTokenSvc {
   }
   
   /**
-   A user with that email, using the sharedPassword is expected to already
+   A user with the given email, using the sharedPassword, is expected to already
    have been created for the test client/audience.
    Don't share this audience with production, keep them separate.
    In order for this to work, the Auth0 tenant settings must have the default
@@ -99,7 +100,7 @@ public class AuthnTokenSvc {
     }
     catch( HttpClientErrorException.TooManyRequests ex ){
       log.with("headers", ex.getResponseHeaders()).
-        error("post to auth0 /oauth/token returned TooManyRequests");
+        error("post to Auth0 /oauth/token returned TooManyRequests");
       throw ex;
     }
 
