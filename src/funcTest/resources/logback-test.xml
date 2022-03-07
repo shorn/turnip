@@ -31,7 +31,7 @@
   <logger name="org.springframework.web.servlet.PageNotFound" level="error"/>
 
   <!-- filter annoying debug "resolved ... to" message --> 
-  <logger name="turnip.spring.config.SecureExceptionResolver" level="info"/>
+  <logger name="turnip.spring.config.RedactingExceptionResolver" level="info"/>
 
   
 </configuration>

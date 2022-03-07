@@ -23,6 +23,9 @@ java{
   }
 }
 
+// compile funcTest classes - but don't run by default (needs Auth0 setup)
+tasks.build.dependsOn funcTestClasses
+
 tasks.withType(JavaCompile) {
   // show details of deprecated usage
   options.compilerArgs += "-Xlint:deprecation"
@@ -34,14 +37,6 @@ tasks.withType(JavaCompile) {
   // UTF-8 everywhere - yes, even (especially!) when compiling 
   // your IDE should be set to UTF-8, too
   options.encoding = "UTF-8"
-
-}
-tasks.withType(Test) {
-//  jvmArgs += ""
-}
-tasks.withType(JavaExec) {
-//  jvmArgs += ""
-//  environment << ["":""]
 }
 
 dependencies{
@@ -194,3 +189,4 @@ task uberJar(type: Jar) {
     println "generating uberJar to ${archiveFile.get()}"
   }
 }
+

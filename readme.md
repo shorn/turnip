@@ -1,4 +1,5 @@
-Example project for running a Jetty server with JDK 17 and Spring.
+Example project for running a Jetty server with JDK 17, Spring, Auth0 and NOT 
+using spring-b**t.
 
 
 ## Building

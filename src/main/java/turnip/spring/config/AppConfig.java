@@ -90,7 +90,7 @@ public class AppConfig {
   public HandlerExceptionResolver handlerExceptionResolver(
     @Value("${redactErrorDetails:true}") boolean redactErrorDetails
   ) {
-    return new SecureExceptionResolver(redactErrorDetails);
+    return new RedactingExceptionResolver(redactErrorDetails);
   }
 
 }
