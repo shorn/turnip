@@ -1,13 +1,10 @@
 package turnip.functional.authn;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.client.HttpClientErrorException.Forbidden;
 import turnip.endpoint.MiscAdmin;
 import turnip.functional.FunctionalTestCase;
-import turnip.functional.spring.bean.UserManager;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -16,10 +13,7 @@ import static turnip.unit.util.BDD.THEN;
 import static turnip.unit.util.BDD.WHEN;
 
 public class AuthnInvalidTokenTest extends FunctionalTestCase {
-  @Autowired private UserManager userManager;
-
-
-  @Test public void testInvalidJwtSignature(TestInfo testInfo){
+  @Test public void testInvalidJwtSignature(){
     EXPECT("/list-users can be called with a valid admin token");
     assertThat(
       get(token.getAdmin(), "/api/list-users", MiscAdmin.ListUsersResult.class).emails()
