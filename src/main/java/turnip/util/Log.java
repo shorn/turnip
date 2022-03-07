@@ -4,6 +4,7 @@ package turnip.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.Supplier;
@@ -259,8 +260,8 @@ public class Log {
       this.log = log;
       this.msg = msg;
       this.messageArgs = messageArgs;
-      // TreeMap to retain the order the args were added in
-      this.structuredArgs = new TreeMap<>();
+      // LinkedHashMap so that insert order defines print order
+      this.structuredArgs = new LinkedHashMap<>();
     }
 
     /**
