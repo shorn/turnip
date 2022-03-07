@@ -1,4 +1,6 @@
-package turnip.util;
+package turnip.unit.util;
+
+import turnip.util.Log;
 
 /**
  Behaviour Derive Development logging util.

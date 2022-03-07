@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpEntity;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static turnip.util.BDD.THEN;
-import static turnip.util.BDD.WHEN;
+import static turnip.unit.util.BDD.THEN;
+import static turnip.unit.util.BDD.WHEN;
 
 public class RestUtilTest {
   @Test
