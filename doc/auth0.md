@@ -66,8 +66,8 @@ dependencies on Auth0 (instead of calling Auth0 API for getting the email).
 
 If I want to replace Auth0, I only need to make sure the new ID service
 populates these non-standard claims (along with standard claims like `audience`
-and `issuer` and publishing KWKS properly), and my back-end security code could
-theoretically be completely Auth0 agnostic.
+and `issuer` and publishing JWKS certificates properly), and my back-end 
+authentication code could theoretically be completely Auth0 agnostic.
 
 Note that currently Turnip is NOT Auth0-agnostic.  It uses use the Auth0
 Spring integration library, which takes care of the fiddly JWKS stuff and token
