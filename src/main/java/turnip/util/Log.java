@@ -34,10 +34,19 @@ import static turnip.util.StringUtil.nullToString;
  </li> <li>
  Eases upgrade burden when upgrading libraries, and makes it easy to move
  code between different codebases that always seem to use different logging.
- </li> <li>
+ </li> </ul>
+ <ul>Future: <li>
  AVOID: don't add anonymous `with(Object)` or with `with(Object...)` methods 
  that just lets you add unnamed objects to be printed out.  Force the user 
  to provide a name, better for the app in the long run.
+ </li> <li>
+ IMPROVE: String.format() is fairly safe (and looked after by the JDK people 
+ instead of random open-source folks - see Log4j2 logpocalypse).
+ But it'd be good to add some abuse prevention (whitelist scanning for weird 
+ characters for injection attacks etc.) 
+ I think a fail-fast and warn approach would be good - limit to 7-bit ASCII and
+ add exceptions as they are proven to be necessary.  Or maybe use something
+ like the OWASP encoder?
  </li> </ul>
  */
 public class Log {
