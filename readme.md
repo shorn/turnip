@@ -67,6 +67,9 @@ funcTestAuth0ClientSecret=XXX
 funcTestSharedPassword=XXX
 ```
 
+Functional tests exists as a separate source-set from unit tests.
+The functonal tests can be run with the `funcTest` class (after Auth0 config).
+
 ## Auth0 usage limits
 
 There are strict usage limits for Auth0, especially free accounts - 
