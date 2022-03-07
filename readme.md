@@ -45,12 +45,12 @@ function (user, context, callback) {
 
 ## Setup for functional tests
 
-I store my credentiaals in my Keepass (/Rabbit/Auth0/Turnip Auth0).
+I store my credentials in my Keepass (/Rabbit/Auth0/Turnip Auth0).
 
-Most Auth0 settings are defaulted for my personal turnip Auth0 account setup as 
-described above.  
+Most Auth0 settings, except credentials, are defaulted (in the Spring property
+config in code) for my personal turnip Auth0 account setup as described above.  
 
-But the `funcTestAuth0ClientSecret` (from Auth0 console or keepass) must be set.
+The `funcTestAuth0ClientSecret` (from Auth0 console or keepass) must be set.
 
 The usernames are defaulted (`funcTestUserEmail` etc.), but the password must 
 be set in the `funcTestSharedPassword` property (see Keepass).  
@@ -70,8 +70,11 @@ funcTestSharedPassword=XXX
 ## Auth0 usage limits
 
 There are strict usage limits for Auth0, especially free accounts - 
-eventually will run into them if making too many tests.  Will have to slow down
-the tests or something eventually.
+eventually will run into them if running too many tests and will start getting
+TooManyRequests errors.  
+Will have to slow down the tests or something eventually.
+Can also get TooManyRequests if messed up the user passwords and accounts get
+blocked (can unblock in Auth0 console).
 
 If there's an error with too many requests or similar, the Auth0 API will
 return details of the issue (and reset time) in the response headers of the 

@@ -1,7 +1,5 @@
 package turnip.util;
 
-import static turnip.util.Log.to;
-
 /**
  Behaviour Derive Development logging util.
  <p>

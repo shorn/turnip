@@ -10,17 +10,13 @@ import turnip.endpoint.MiscAdmin.ListUsersResult;
 import turnip.functional.FunctionalTestCase;
 import turnip.functional.spring.bean.UserManager;
 import turnip.service.UserSvc.UserInfo;
+import turnip.util.BDD;
 
-import java.util.List;
-
-import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static turnip.service.AuthzSvc.USER_ROLE;
 import static turnip.util.BDD.EXPECT;
 import static turnip.util.BDD.GIVEN;
-import static turnip.util.BDD.THEN;
-import static turnip.util.BDD.WHEN;
 
 /**
 The actual application logic doesn't really make sense because it's not a real
@@ -54,10 +50,10 @@ public class MiscAdminEndpointTest extends FunctionalTestCase {
     ).isNotNull().asList().doesNotContain(newUserEmail);
     
     
-    WHEN("new user is added");
+    BDD.WHEN("new user is added");
     UserInfo newUser = post(token.getAdmin(), "/api/add-user", 
       new AddUserRequest(newUserEmail, USER_ROLE), UserInfo.class);
-    THEN("/list-users should return the new user");
+    BDD.THEN("/list-users should return the new user");
     assertThat(
       get(token.getAdmin(), "/api/list-users", ListUsersResult.class).emails()
     ).isNotNull().asList().contains(newUserEmail);

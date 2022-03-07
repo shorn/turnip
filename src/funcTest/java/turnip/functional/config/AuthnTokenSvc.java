@@ -20,6 +20,7 @@ import static java.lang.String.format;
 import static turnip.util.Log.to;
 import static turnip.util.RestUtil.createEntityWithBearer;
 
+/** Utility service for talking to Auth0 to get authn tokens for test users */
 @Component
 public class AuthnTokenSvc {
   protected Log log = to(AuthnTokenSvc.class);

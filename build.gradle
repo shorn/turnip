@@ -9,6 +9,14 @@ repositories{
   mavenCentral()
 }
 
+sourceSets {
+  funcTest { }
+}
+
+configurations {
+  funcTestImplementation.extendsFrom(testImplementation)
+}
+
 java{
   toolchain{
     languageVersion = JavaLanguageVersion.of(17)
@@ -93,6 +101,16 @@ dependencies{
   testImplementation 'org.springframework:spring-test:5.3.16'
   testImplementation "org.assertj:assertj-core:3.22.0"
 
+  // for compilation depending on prod classes   
+  funcTestImplementation sourceSets.main.output
+  
+  /* for compilation depending on test util classes; without this , funcTest 
+  will fail to compile, can't find stuff like BDD */
+  funcTestImplementation sourceSets.test.output
+  
+  /* without this, funcTest runtime fails to find logback-test.xml when run
+  from IDEA. IDE issue only -  gradle `funcTest` task works fine. */
+  funcTestRuntimeOnly sourceSets.test.runtimeClasspath
 }
 
 application{
@@ -119,16 +137,29 @@ test{
   include 'turnip/unit/**'
 }
 
-task functionalTest(type:Test){
+task funcTest(type: Test) {
+  description = "Run FUNCtional tests"
   group = "verification"
-  description = "run functional tests - requires config of Auth0 secrets"
+
+  testClassesDirs = sourceSets.funcTest.output.classesDirs
+  classpath += sourceSets.funcTest.runtimeClasspath
+
+  // execute tests even if no prod or test code has changed
   outputs.upToDateWhen {false}
 
-  useJUnitPlatform()
-  jvmArgs += applicationDefaultJvmArgs
-  testLogging.showStandardStreams = true
+  testLogging{
+    showStandardStreams = true
+    exceptionFormat = 'full'
+  }
 
-  include 'turnip/functional/**'
+  // `set()` is just to suppress IDEA warning
+  javaLauncher.set(javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(17) 
+  })
+
+  useJUnitPlatform()
+
+  jvmArgs += applicationDefaultJvmArgs
 }
 
 task uberJar(type: Jar) {
