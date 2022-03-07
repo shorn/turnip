@@ -45,7 +45,7 @@ import static turnip.util.StringUtil.nullToString;
  But it'd be good to add some abuse prevention (whitelist scanning for weird 
  characters for injection attacks etc.) 
  I think a fail-fast and warn approach would be good - limit to 7-bit ASCII and
- add exceptions as they are proven to be necessary.  Or maybe use something
+ add exceptions as they are proven to be necessary.  Or maybe just use something
  like the OWASP encoder?
  </li> </ul>
  */
