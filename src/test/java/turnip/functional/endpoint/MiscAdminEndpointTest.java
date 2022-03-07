@@ -11,11 +11,16 @@ import turnip.functional.FunctionalTestCase;
 import turnip.functional.spring.bean.UserManager;
 import turnip.service.UserSvc.UserInfo;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static turnip.service.AuthzSvc.USER_ROLE;
+import static turnip.util.BDD.EXPECT;
+import static turnip.util.BDD.GIVEN;
+import static turnip.util.BDD.THEN;
+import static turnip.util.BDD.WHEN;
 
 /**
 The actual application logic doesn't really make sense because it's not a real
@@ -27,38 +32,34 @@ public class MiscAdminEndpointTest extends FunctionalTestCase {
   
   @Test
   public void addUserFlowShouldWork(TestInfo testInfo){
+    GIVEN("non-admin user exists");
     var userInfo = get(token.getUser(), "/api/user-info", UserInfo.class);
-    assertEquals(props.userEmail, userInfo.email());
+    assertThat(userInfo.email()).isEqualTo(props.userEmail);
 
-    log.debug("only admin should be able to call /list-users");
-    try {
-      get(token.getUser(), "/api/list-users", ListUsersResult.class);
-      fail("should have failed because of user not authz");
-    }
-    catch( HttpClientErrorException e ){
-      assertEquals(HttpStatus.UNAUTHORIZED, e.getStatusCode());
-    }
-
-    String newUserEmail = userManager.
-      formatNewUserEmail(getTestPrefix(testInfo));
-
-    log.info("should not list new user");
-    ListUsersResult listResult = 
-      get(token.getAdmin(), "/api/list-users", ListUsersResult.class);
-    // will start failing (possibly intermittently) once result is paginated
-    assertFalse(listResult.emails().contains(newUserEmail));
     
-    log.info("should add new user");
+    EXPECT("non-admin user can't call /list-users because not authorized");
+    assertThatExceptionOfType(HttpClientErrorException.class).isThrownBy(()->{
+      get(token.getUser(), "/api/list-users", ListUsersResult.class);
+    }).satisfies(e->{
+      assertThat(e.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    });
+
+
+    // will start failing (possibly intermittently) once result is paginated
+    EXPECT("/list-users should return empty for non-existent user");
+    String newUserEmail = userManager.formatNewUserEmail(
+      getTestPrefix(testInfo) );
+    assertThat(
+      get(token.getAdmin(), "/api/list-users", ListUsersResult.class).emails()
+    ).isNotNull().asList().doesNotContain(newUserEmail);
+    
+    
+    WHEN("new user is added");
     UserInfo newUser = post(token.getAdmin(), "/api/add-user", 
       new AddUserRequest(newUserEmail, USER_ROLE), UserInfo.class);
-    log.info("newUser email %s", newUser.email());
-    
-    log.info("should list new user");
-    listResult =
-      get(token.getAdmin(), "/api/list-users", ListUsersResult.class);
-    // will start failing (possibly intermittently) once result is paginated
-    assertTrue(listResult.emails().contains(newUserEmail));
+    THEN("/list-users should return the new user");
+    assertThat(
+      get(token.getAdmin(), "/api/list-users", ListUsersResult.class).emails()
+    ).isNotNull().asList().contains(newUserEmail);
   }
-
-
 }

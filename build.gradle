@@ -91,6 +91,7 @@ dependencies{
 
   // for integrating junit and spring - pkg: org.springframework.test
   testImplementation 'org.springframework:spring-test:5.3.16'
+  testImplementation "org.assertj:assertj-core:3.22.0"
 
 }
 
