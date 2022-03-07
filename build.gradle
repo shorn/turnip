@@ -128,8 +128,6 @@ test{
   useJUnitPlatform()
   jvmArgs += applicationDefaultJvmArgs
   testLogging.showStandardStreams = true
-
-  include 'turnip/unit/**'
 }
 
 task funcTest(type: Test) {
