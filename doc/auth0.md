@@ -23,10 +23,10 @@ STO: Keepass is under (/Rabbit/Auth0/Turnip Auth0).
 # Auth0 Account Setup
 
 I avoid using the default Tenant, Applications, APIs etc. that Auth0 creates
-as default and use a new tenant.  Using the default on a empty / new account is
+as default and use a new tenant.  Using the defaults on a empty / new account is
 probably fine, but would be a *very* bad idea if you're already using that
-Auth0 account for something else.  Using a separate Tenant will keep you 
-separate and safe.
+Auth0 account for something else.  Using a new Tenant will keep Turnip stuff 
+separate and firewalled off from anything else you might doing.
 
 
 ## Must have a "Tenant"
