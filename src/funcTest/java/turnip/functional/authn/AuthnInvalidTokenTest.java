@@ -19,12 +19,12 @@ public class AuthnInvalidTokenTest extends FunctionalTestCase {
       get(token.getAdmin(), "/api/list-users", MiscAdmin.ListUsersResult.class).emails()
     ).asList().isNotEmpty();
 
+    
     WHEN("/list-users is called with a scam token");
     var components = token.getAdmin().split("\\.");
     var fakeToken = components[0] + "." + components[1] + "." +
       // header and payload are valid, but signature is now invalid
       components[2] + "0";
-
     THEN("server should reject with a 403");
     assertThatExceptionOfType(Forbidden.class).isThrownBy(()->
       get(fakeToken, "/api/list-users", MiscAdmin.ListUsersResult.class)
@@ -32,7 +32,5 @@ public class AuthnInvalidTokenTest extends FunctionalTestCase {
       log.info("exception: " + e);
       assertThat(e.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     });
-  ;
-    
   }
 }
