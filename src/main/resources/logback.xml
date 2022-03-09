@@ -13,11 +13,11 @@
       decimals and commas are transposed, because *of course* they are.
       The comma separator is why we need the quotes.     
       -->
-      <pattern>%date{"HH:mm:ss,SSS"} %level %thread %logger{0} %m%n</pattern>
+      <pattern>%date{"HH:mm:ss,SSS"} [%thread] %level %logger{0} %m%n</pattern>
     </encoder>
   </appender>
 
-  <root level="info">
+  <root level="debug">
     <appender-ref ref="UNMASKED_CONSOLE"/>
   </root>
 
