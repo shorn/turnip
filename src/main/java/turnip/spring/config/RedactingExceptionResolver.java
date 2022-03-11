@@ -18,7 +18,7 @@ import java.util.Date;
 
 import static turnip.util.Log.to;
 
-/** In prod, this sould be configured that the resolver will make
+/** In prod, this should be configured that the resolver will make
  sure we don't send any exception details to callers of the API (to avoid
  accidentall leakage of information). */
 public class RedactingExceptionResolver extends AbstractHandlerExceptionResolver {
